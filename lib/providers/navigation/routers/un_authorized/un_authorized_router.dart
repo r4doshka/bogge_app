@@ -1,0 +1,22 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/models/router/router_model.dart';
+import 'package:bogge_app/providers/navigation/routers/un_authorized/un_authorized_router.gr.dart';
+
+@AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
+class UnAuthorizedRouter extends RootStackRouter {
+  @override
+  List<AutoRoute> get routes => [
+    CustomRoute(
+      path: AppRoutesList.signIn.link,
+      initial: true,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      page: SignInRoute.page,
+    ),
+    CustomRoute(
+      path: AppRoutesList.signUp.link,
+      initial: true,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      page: SignUpRoute.page,
+    ),
+  ];
+}
