@@ -29,8 +29,9 @@ class CommonNavigatorObserver extends AutoRouterObserver {
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     final notifier = ref.read(navigationStoreProvider.notifier);
     final stack = ref.read(navigationStoreProvider);
-
-    notifier.replaceRoute(oldRoute, newRoute);
+    Future.microtask(() {
+      notifier.replaceRoute(oldRoute, newRoute);
+    });
 
     debugPrint(
       'Stack after replace: ${stack.map((r) => _routeName(r)).toList()}',
@@ -41,8 +42,9 @@ class CommonNavigatorObserver extends AutoRouterObserver {
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     final notifier = ref.read(navigationStoreProvider.notifier);
     final stack = ref.read(navigationStoreProvider);
-
-    notifier.removeRoute(route);
+    Future.microtask(() {
+      notifier.removeRoute(route);
+    });
 
     debugPrint(
       'Stack after remove: ${stack.map((r) => _routeName(r)).toList()}',
@@ -55,22 +57,25 @@ class CommonNavigatorObserver extends AutoRouterObserver {
     ActionType action,
   ) {
     final notifier = ref.read(navigationStoreProvider.notifier);
-    final stack = ref.read(navigationStoreProvider);
 
-    switch (action) {
-      case ActionType.push:
-        notifier.addRoute(route);
-        debugPrint(
-          'Stack after push: ${stack.map((r) => _routeName(r)).toList()}',
-        );
-        break;
-      case ActionType.pop:
-        notifier.removeRoute(route);
-        debugPrint(
-          'Stack after pop: ${stack.map((r) => _routeName(r)).toList()}',
-        );
-        break;
-    }
+    Future.microtask(() {
+      switch (action) {
+        case ActionType.push:
+          notifier.addRoute(route);
+          final updatedStack = ref.read(navigationStoreProvider);
+          debugPrint(
+            'Stack after push: ${updatedStack.map((r) => _routeName(r)).toList()}',
+          );
+          break;
+        case ActionType.pop:
+          notifier.removeRoute(route);
+          final updatedStack = ref.read(navigationStoreProvider);
+          debugPrint(
+            'Stack after pop: ${updatedStack.map((r) => _routeName(r)).toList()}',
+          );
+          break;
+      }
+    });
   }
 
   void clearStack() {

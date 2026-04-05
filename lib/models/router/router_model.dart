@@ -2,6 +2,7 @@ enum AppRoutesList {
   mainOnboarding,
   signIn,
   signUp,
+  welcome,
   signUpConfirmation,
   resetPasswordNew,
   resetPassword,
@@ -13,7 +14,9 @@ enum AppRoutesList {
 }
 
 enum AppModalList {
-  internetWarning;
+  internetWarning,
+  userAgreement,
+  privacyPolicy;
 
   String get title => "${name}Modal";
 }

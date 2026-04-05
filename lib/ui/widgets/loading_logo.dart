@@ -27,16 +27,16 @@ class LoadingLogo extends HookWidget {
             scale: scaleAnimation,
             child: SvgPicture.asset(
               'assets/icons/logo-icon.svg',
-              width: 100.w,
-              height: 100.w,
+              width: 50.w,
+              height: 50.w,
             ),
           )
         else
           Center(
             child: SvgPicture.asset(
               'assets/icons/logo-icon.svg',
-              width: 100.w,
-              height: 100.w,
+              width: 50.w,
+              height: 50.w,
             ),
           ),
       ],

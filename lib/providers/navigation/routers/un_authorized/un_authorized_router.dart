@@ -7,16 +7,25 @@ class UnAuthorizedRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     CustomRoute(
-      path: AppRoutesList.signIn.link,
+      path: AppRoutesList.welcome.link,
       initial: true,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      page: WelcomeRoute.page,
+    ),
+    CustomRoute(
+      path: AppRoutesList.signIn.link,
       transitionsBuilder: TransitionsBuilders.noTransition,
       page: SignInRoute.page,
     ),
     CustomRoute(
       path: AppRoutesList.signUp.link,
-      initial: true,
       transitionsBuilder: TransitionsBuilders.noTransition,
       page: SignUpRoute.page,
+    ),
+    CustomRoute(
+      path: AppRoutesList.resetPassword.link,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      page: ResetPasswordRoute.page,
     ),
   ];
 }

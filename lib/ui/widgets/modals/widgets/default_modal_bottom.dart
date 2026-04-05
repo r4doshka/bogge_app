@@ -1,3 +1,4 @@
+import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/widgets/modals/widgets/modal_bottom_container.dart';
 import 'package:bogge_app/ui/widgets/modals/widgets/modal_close_button.dart';
 import 'package:bogge_app/ui/widgets/modals/widgets/modal_title.dart';
@@ -17,7 +18,6 @@ Future<void> showDefaultModalBottom<T>({
   void Function()? onClose,
   void Function()? onSkip,
   Widget Function()? contentRenderer,
-  String? closeButtonText,
   bool withLine = true,
   String? modalName,
 }) async {
@@ -47,24 +47,29 @@ Future<void> showDefaultModalBottom<T>({
           withLine: withLine,
           contentRenderer: contentRenderer,
           children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 80.w,
-                  child: hasCloseButton
-                      ? ModalCloseButton(
-                          onClose: onClose,
-                          text: closeButtonText,
-                        )
-                      : const SizedBox(),
-                ),
-                Expanded(
-                  child: title != null && title.isNotEmpty
-                      ? ModalTitle(label: title)
-                      : const SizedBox(),
-                ),
-                SizedBox(width: 80.w, child: const SizedBox()),
-              ],
+            Padding(
+              padding: AppSpace.ph16,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 50.w,
+                    child: hasCloseButton
+                        ? Container(
+                            alignment: AlignmentDirectional.centerStart,
+                            height: AppSpace.s44.h,
+                            width: AppSpace.s44.w,
+                            child: ModalCloseButton(onClose: onClose),
+                          )
+                        : const SizedBox(),
+                  ),
+                  Expanded(
+                    child: title != null && title.isNotEmpty
+                        ? ModalTitle(label: title)
+                        : const SizedBox(),
+                  ),
+                  SizedBox(width: 50.w, child: const SizedBox()),
+                ],
+              ),
             ),
             child,
           ],

@@ -1,32 +1,33 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:bogge_app/providers/theme/palette_provider.dart';
+import 'package:bogge_app/ui/ui_tokens/app_space.dart';
+import 'package:bogge_app/ui/widgets/buttons/primary_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ModalCloseButton extends StatelessWidget {
+class ModalCloseButton extends ConsumerWidget {
   final void Function()? onClose;
-  final String? text;
 
-  const ModalCloseButton({this.onClose, this.text, super.key});
+  const ModalCloseButton({this.onClose, super.key});
 
   @override
-  Widget build(context) {
-    final buttonText = text ?? 'Close'.tr();
+  Widget build(context, ref) {
+    final palette = ref.watch(paletteProvider);
 
-    return GestureDetector(
-      onTap: () {
+    return PrimaryIconButton(
+      svgPath: 'assets/icons/chevron-left-icon.svg',
+      iconWidth: AppSpace.s12.w,
+      iconHeight: 18.h,
+      containerHeight: AppSpace.s44.w,
+      containerWidth: AppSpace.s44.w,
+      backgroundColor: palette.primary12,
+      onPress: () {
         if (onClose != null) {
           onClose!();
         }
         context.router.pop();
       },
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(start: 16.w),
-        child: Text(
-          buttonText,
-          // style: text_s14_w500.copyWith(color: palette.gray2),
-        ),
-      ),
     );
   }
 }
