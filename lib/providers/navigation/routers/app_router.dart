@@ -9,7 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final appRouterNotifierProvider = Provider<ValueNotifier<AppRouter>>((ref) {
-  return ValueNotifier(AppRouter(ref));
+  final notifier = ValueNotifier(AppRouter(ref));
+
+  ref.listen(routeStackProvider, (_, __) {
+    notifier.value = AppRouter(ref);
+  });
+
+  return notifier;
 });
 
 @AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
@@ -29,23 +35,16 @@ class AppRouter extends RootStackRouter {
   List<AutoRoute> get routes {
     final routeStack = ref.read(routeStackProvider);
 
-    if (routeStack == RouteStackType.init) {
-      return _initRoutes;
+    switch (routeStack) {
+      case RouteStackType.init:
+        return _initRoutes;
+      case RouteStackType.authorized:
+        return _authorizedRoutes;
+      case RouteStackType.guestMode:
+        return _guestRoutes;
+      case RouteStackType.unAuthorized:
+        return _unauthorizedRoutes;
     }
-
-    if (routeStack == RouteStackType.authorized) {
-      return _authorizedRoutes;
-    }
-
-    if (routeStack == RouteStackType.guestMode) {
-      return _guestRoutes;
-    }
-
-    if (routeStack == RouteStackType.unAuthorized) {
-      return _unauthorizedRoutes;
-    }
-
-    return _unauthorizedRoutes;
   }
 
   List<AutoRoute> get _authorizedRoutes => AuthorizedRouter().routes;

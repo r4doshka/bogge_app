@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:bogge_app/models/api_response.dart';
 import 'package:bogge_app/models/request_error_model.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
 import 'package:bogge_app/providers/environment_service_provider.dart';
@@ -67,11 +68,13 @@ class DioStateNotifier extends StateNotifier<Dio> {
     return dio;
   }
 
-  Future get({
-    required query,
+  Future<ApiResponse<T, E, S>> get<T, E, S>({
+    required String query,
     Map<String, dynamic>? queryParameters,
     AuthType type = AuthType.none,
     String? baseUrl,
+    E Function(String?)? errorMapper,
+    S Function(String?)? successMapper,
   }) async {
     final client = baseUrl != null
         ? _createDioInstance(baseUrl: baseUrl)
@@ -86,11 +89,13 @@ class DioStateNotifier extends StateNotifier<Dio> {
           extra: {'authType': type},
         ),
       ),
+      errorMapper: errorMapper,
+      successMapper: successMapper,
     );
   }
 
-  Future post({
-    required query,
+  Future<ApiResponse<T, E, S>> post<T, E, S>({
+    required String query,
     Object? data,
     AuthType type = AuthType.none,
     bool useBaseUrl = true,
@@ -98,6 +103,8 @@ class DioStateNotifier extends StateNotifier<Dio> {
     CancelToken? cancelToken,
     void Function(int, int)? onSendProgress,
     bool withCloudflareInterceptors = false,
+    E Function(String?)? errorMapper,
+    S Function(String?)? successMapper,
   }) async {
     final client = baseUrl != null
         ? _createDioInstance(baseUrl: baseUrl)
@@ -114,13 +121,17 @@ class DioStateNotifier extends StateNotifier<Dio> {
           extra: {'authType': type},
         ),
       ),
+      errorMapper: errorMapper,
+      successMapper: successMapper,
     );
   }
 
-  Future patch({
-    required query,
+  Future<ApiResponse<T, E, S>> patch<T, E, S>({
+    required String query,
     Map<String, dynamic>? data,
     AuthType type = AuthType.none,
+    E Function(String?)? errorMapper,
+    S Function(String?)? successMapper,
   }) async {
     return await _sendRequest(
       state.patch(
@@ -131,13 +142,17 @@ class DioStateNotifier extends StateNotifier<Dio> {
           extra: {'authType': type},
         ),
       ),
+      errorMapper: errorMapper,
+      successMapper: successMapper,
     );
   }
 
-  Future put({
-    required query,
+  Future<ApiResponse<T, E, S>> put<T, E, S>({
+    required String query,
     Map<String, dynamic>? data,
     AuthType type = AuthType.none,
+    E Function(String?)? errorMapper,
+    S Function(String?)? successMapper,
   }) async {
     return await _sendRequest(
       state.put(
@@ -148,15 +163,19 @@ class DioStateNotifier extends StateNotifier<Dio> {
           extra: {'authType': type},
         ),
       ),
+      errorMapper: errorMapper,
+      successMapper: successMapper,
     );
   }
 
-  Future delete({
-    required query,
+  Future<ApiResponse<T, E, S>> delete<T, E, S>({
+    required String query,
     Map<String, dynamic>? data,
     AuthType type = AuthType.none,
     bool useBaseUrl = false,
     Map<String, dynamic>? queryParameters,
+    E Function(String?)? errorMapper,
+    S Function(String?)? successMapper,
   }) async {
     return await _sendRequest(
       state.delete(
@@ -168,6 +187,8 @@ class DioStateNotifier extends StateNotifier<Dio> {
           extra: {'authType': type},
         ),
       ),
+      errorMapper: errorMapper,
+      successMapper: successMapper,
     );
   }
 
@@ -184,26 +205,64 @@ class DioStateNotifier extends StateNotifier<Dio> {
     };
   }
 
-  Future _sendRequest(Future<Response> request) async {
+  Future<ApiResponse<T, E, S>> _sendRequest<T, E, S>(
+    Future<Response> request, {
+    E Function(String?)? errorMapper,
+    S Function(String?)? successMapper,
+  }) async {
     try {
       final response = await request;
-      return response.data;
+
+      return ApiResponse<T, E, S>.fromJson(
+        response.data,
+        errorMapper: errorMapper,
+        successMapper: successMapper,
+      );
     } on DioException catch (error) {
-      final response = error.response;
+      final data = error.response?.data;
+
+      if (data is Map<String, dynamic>) {
+        return ApiResponse<T, E, S>.fromJson(
+          data,
+          errorMapper: errorMapper,
+          successMapper: successMapper,
+        );
+      }
 
       throw RequestErrorModel(
         errorMessage: error.message,
-        responseStatus: response?.statusCode,
-        responseError: response?.data?['error'],
-        responsePath: response?.requestOptions.path,
+        responseStatus: error.response?.statusCode,
+        responseError: null,
+        responseMessage: null,
+        responsePath: error.requestOptions.path,
+        failureType: _mapRequestFailure(error),
       );
-    } catch (error, _) {
-      throw const RequestErrorModel(
-        errorMessage: 'Unable to parse',
-        responseStatus: null,
-        responseError: 'The response from the server cannot be parsed',
-        responsePath: null,
-      );
+    }
+  }
+
+  RequestFailureType _mapRequestFailure(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return RequestFailureType.timeout;
+
+      case DioExceptionType.connectionError:
+        return RequestFailureType.network;
+
+      case DioExceptionType.cancel:
+        return RequestFailureType.cancelled;
+
+      case DioExceptionType.badResponse:
+        final status = error.response?.statusCode;
+        if (status == 401 || status == 403) {
+          return RequestFailureType.unauthorized;
+        }
+        return RequestFailureType.server;
+
+      case DioExceptionType.badCertificate:
+      case DioExceptionType.unknown:
+        return RequestFailureType.unknown;
     }
   }
 
@@ -243,6 +302,7 @@ class DioStateNotifier extends StateNotifier<Dio> {
             "\n---------- DioResponse ----------"
             "\n\turl: ${options.baseUrl}${options.path}"
             "\n\tmethod: ${options.method}"
+            "\n\\statusCode: ${response.statusCode}"
             "\n\tresponse: $response"
             "\n--------------------------------\n",
           );

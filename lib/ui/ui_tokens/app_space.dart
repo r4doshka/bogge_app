@@ -5,6 +5,14 @@ class AppSpace {
   AppSpace._();
 
   // raw values
+  static const double s7 = 7;
+  static const double s14 = 14;
+  static const double s34 = 34;
+
+  // height gaps
+  static SizedBox get h14 => SizedBox(height: s14.h);
+
+  // raw values
   static const double s2 = 2;
   static const double s4 = 4;
   static const double s8 = 8;

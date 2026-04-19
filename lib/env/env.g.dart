@@ -10,7 +10,7 @@ part of 'env.dart';
 // ignore_for_file: type=lint
 // generated_from: .env.development
 final class _DevEnv {
-  static const String baseUrl = 'https://test.com';
+  static const String baseUrl = 'http://localhost:3000';
 }
 
 // coverage:ignore-file

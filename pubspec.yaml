@@ -26,6 +26,8 @@ dependencies:
   hooks_riverpod: ^3.3.1
   flutter_native_splash: ^2.4.7
   flutter_launcher_icons: ^0.14.4
+  reactive_forms: ^18.2.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -75,3 +77,17 @@ flutter:
   - assets/images/
   - assets/images/launcher/
   - assets/images/splash/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter/Inter_18pt-Black.ttf
+          weight: 900
+        - asset: assets/fonts/inter/Inter_18pt-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/inter/Inter_18pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/inter/Inter_18pt-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter/Inter_18pt-Regular.ttf
+          weight: 400

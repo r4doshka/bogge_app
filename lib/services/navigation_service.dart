@@ -18,14 +18,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class NavigationService {
   final Ref ref;
   final CommonNavigatorObserver _navigatorObserver;
-  final ValueNotifier<AppRouter> _appRouterNotifier;
+  final ValueNotifier<AppRouter> _appRouter;
 
   NavigationService({
     required this.ref,
     required CommonNavigatorObserver navigatorObserver,
-    required ValueNotifier<AppRouter> appRouterNotifier,
+    required ValueNotifier<AppRouter> appRouter,
   }) : _navigatorObserver = navigatorObserver,
-       _appRouterNotifier = appRouterNotifier;
+       _appRouter = appRouter;
 
   BuildContext? layoutContext;
   TabsRouter? tabsRouter;
@@ -38,7 +38,7 @@ class NavigationService {
         .update((s) => RouteStackType.guestMode);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _appRouterNotifier.value.replaceAll([const guest.GuestWelcomeRoute()]);
+      _appRouter.value.replaceAll([const guest.GuestWelcomeRoute()]);
     });
   }
 
@@ -50,7 +50,7 @@ class NavigationService {
         .update((s) => RouteStackType.unAuthorized);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _appRouterNotifier.value.pushAndPopUntil(
+      _appRouter.value.pushAndPopUntil(
         const un_authorized.SignInRoute(),
         predicate: (_) => false,
       );
@@ -65,7 +65,7 @@ class NavigationService {
         .update((s) => RouteStackType.unAuthorized);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _appRouterNotifier.value.pushAndPopUntil(
+      _appRouter.value.pushAndPopUntil(
         const un_authorized.SignUpRoute(),
         predicate: (_) => false,
       );
@@ -80,18 +80,23 @@ class NavigationService {
         .update((s) => RouteStackType.authorized);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _appRouterNotifier.value.replaceAll([const auth.AuthorizedLoadRoute()]);
+      final observer = ref.read(commonNavigatorObserverProvider);
+      observer.clearStack();
+      _appRouter.value.replaceAll([const auth.AuthorizedLoadRoute()]);
     });
   }
 
   void goToUnAuthorizedMode(BuildContext context) {
     ref.read(authProvider.notifier).setCurrentFlow(FlowType.unauthorized);
+
     ref
         .read(routeStackProvider.notifier)
         .update((s) => RouteStackType.unAuthorized);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _appRouterNotifier.value.replaceAll([const un_authorized.WelcomeRoute()]);
+      final observer = ref.read(commonNavigatorObserverProvider);
+      observer.clearStack();
+      _appRouter.value.replaceAll([const un_authorized.WelcomeRoute()]);
     });
   }
 
@@ -100,13 +105,15 @@ class NavigationService {
     ref.read(routeStackProvider.notifier).update((s) => RouteStackType.init);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _appRouterNotifier.value.replaceAll([const auth.SplashRoute()]);
+      final observer = ref.read(commonNavigatorObserverProvider);
+      observer.clearStack();
+      _appRouter.value.replaceAll([const auth.SplashRoute()]);
     });
   }
 
   void pop() {
     try {
-      _appRouterNotifier.value.pop();
+      _appRouter.value.pop();
     } catch (e, stack) {
       debugPrint('NavigationService pop =====> $e');
       debugPrint('NavigationService pop =====> $stack');
@@ -118,6 +125,6 @@ final navigationServiceProvider = Provider<NavigationService>((ref) {
   return NavigationService(
     ref: ref,
     navigatorObserver: ref.read(commonNavigatorObserverProvider),
-    appRouterNotifier: ref.read(appRouterNotifierProvider),
+    appRouter: ref.read(appRouterNotifierProvider),
   );
 });
