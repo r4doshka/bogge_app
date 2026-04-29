@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_icon_button.dart';
@@ -20,7 +22,7 @@ class ProfileButton extends ConsumerWidget {
       containerHeight: AppSpace.s44.w,
       containerWidth: AppSpace.s44.w,
       backgroundColor: palette.primary12,
-      onPress: onPress ?? () {},
+      onPress: onPress ?? () => context.router.push(UserProfileRoute()),
     );
   }
 }

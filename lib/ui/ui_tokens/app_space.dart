@@ -29,6 +29,8 @@ class AppSpace {
   static const double s52 = 52;
   static const double s56 = 56;
   static const double s60 = 60;
+  static const double s64 = 64;
+  static const double s68 = 68;
 
   // height gaps
   static SizedBox get h2 => SizedBox(height: s2.h);
@@ -42,6 +44,7 @@ class AppSpace {
   static SizedBox get h36 => SizedBox(height: s36.h);
   static SizedBox get h40 => SizedBox(height: s40.h);
   static SizedBox get h44 => SizedBox(height: s44.h);
+  static SizedBox get h68 => SizedBox(height: s68.h);
 
   // width gaps
   static SizedBox get w4 => SizedBox(width: s4.w);

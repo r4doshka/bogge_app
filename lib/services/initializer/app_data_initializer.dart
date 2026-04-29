@@ -1,15 +1,22 @@
+import 'package:bogge_app/features/user/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final appDataInitializerProvider = Provider<AppDataInitializer>((ref) {
-  return AppDataInitializer();
-});
+final appDataInitializerProvider = Provider<AppDataInitializer>(
+  (ref) => AppDataInitializer(ref),
+);
 
 class AppDataInitializer {
+  final Ref ref;
+
+  AppDataInitializer(this.ref);
+
   Future<bool> initializeCoreData() async {
     final stopwatch = Stopwatch()..start();
 
-    try {} catch (e) {
+    try {
+      await ref.read(userProvider.notifier).getUser();
+    } catch (e) {
       debugPrint('initializeCoreData load user data error =====>  $e');
     }
 

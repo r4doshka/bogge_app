@@ -14,7 +14,9 @@ enum AppRoutesList {
   onboardingHeight,
   onboardingWeight,
   onboardingName,
-  onboardingAppleHealth;
+  onboardingAppleHealth,
+  home,
+  userProfile;
 
   const AppRoutesList();
 

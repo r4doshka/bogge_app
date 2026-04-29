@@ -1,3 +1,4 @@
+import 'package:bogge_app/models/radio_button_model.dart';
 import 'package:flutter/material.dart';
 
 enum AppEnvironment {
@@ -49,4 +50,16 @@ enum RequestFailureType {
   unauthorized,
   cancelled,
   unknown,
+}
+
+enum SexType {
+  male('Мужской'),
+  female('Женский');
+
+  final String label;
+
+  static List<RadioButtonModel<SexType>> get options =>
+      values.map((el) => RadioButtonModel(label: el.label, value: el)).toList();
+
+  const SexType(this.label);
 }

@@ -36,5 +36,10 @@ class AuthorizedRouter extends RootStackRouter {
       page: OnboardingAppleHealthRoute.page,
       path: AppRoutesList.onboardingAppleHealth.link,
     ),
+    AutoRoute(page: HomeRoute.page, path: AppRoutesList.home.link),
+    AutoRoute(
+      page: UserProfileRoute.page,
+      path: AppRoutesList.userProfile.link,
+    ),
   ];
 }

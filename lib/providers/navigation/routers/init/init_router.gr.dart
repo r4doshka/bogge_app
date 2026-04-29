@@ -9,52 +9,55 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i18;
+import 'package:auto_route/auto_route.dart' as _i20;
+import 'package:bogge_app/ui/screens/authorized/home/home_screen.dart' as _i4;
 import 'package:bogge_app/ui/screens/authorized/loading/authorized_load_screen.dart'
     as _i1;
 import 'package:bogge_app/ui/screens/authorized/onboarding/onboarding_screen.dart'
-    as _i9;
-import 'package:bogge_app/ui/screens/authorized/onboarding_age/onboarding_age_screen.dart'
-    as _i4;
-import 'package:bogge_app/ui/screens/authorized/onboarding_apple_health/onboarding_apple_health_screen.dart'
-    as _i5;
-import 'package:bogge_app/ui/screens/authorized/onboarding_gender/onboarding_gender_screen.dart'
-    as _i6;
-import 'package:bogge_app/ui/screens/authorized/onboarding_height/onboarding_height_screen.dart'
-    as _i7;
-import 'package:bogge_app/ui/screens/authorized/onboarding_name/onboarding_name_screen.dart'
-    as _i8;
-import 'package:bogge_app/ui/screens/authorized/onboarding_weight/onboarding_weight_screen.dart'
     as _i10;
+import 'package:bogge_app/ui/screens/authorized/onboarding_age/onboarding_age_screen.dart'
+    as _i5;
+import 'package:bogge_app/ui/screens/authorized/onboarding_apple_health/onboarding_apple_health_screen.dart'
+    as _i6;
+import 'package:bogge_app/ui/screens/authorized/onboarding_gender/onboarding_gender_screen.dart'
+    as _i7;
+import 'package:bogge_app/ui/screens/authorized/onboarding_height/onboarding_height_screen.dart'
+    as _i8;
+import 'package:bogge_app/ui/screens/authorized/onboarding_name/onboarding_name_screen.dart'
+    as _i9;
+import 'package:bogge_app/ui/screens/authorized/onboarding_weight/onboarding_weight_screen.dart'
+    as _i11;
+import 'package:bogge_app/ui/screens/authorized/user_profile/user_profile_screen.dart'
+    as _i18;
 import 'package:bogge_app/ui/screens/guest/welcome_screen/guest_welcome_screen.dart'
     as _i3;
 import 'package:bogge_app/ui/screens/init/splash_screen/splash_screen.dart'
-    as _i16;
+    as _i17;
 import 'package:bogge_app/ui/screens/unauthorized/reset_password_screen/create_new_password_screen.dart'
     as _i2;
 import 'package:bogge_app/ui/screens/unauthorized/reset_password_screen/reset_password_confirm_email_screen.dart'
-    as _i11;
-import 'package:bogge_app/ui/screens/unauthorized/reset_password_screen/reset_password_screen.dart'
     as _i12;
-import 'package:bogge_app/ui/screens/unauthorized/sign_in_screen/sign_in_screen.dart'
+import 'package:bogge_app/ui/screens/unauthorized/reset_password_screen/reset_password_screen.dart'
     as _i13;
-import 'package:bogge_app/ui/screens/unauthorized/sign_up_confirmation_screen/sign_up_confirmation_screen.dart'
+import 'package:bogge_app/ui/screens/unauthorized/sign_in_screen/sign_in_screen.dart'
     as _i14;
-import 'package:bogge_app/ui/screens/unauthorized/sign_up_screen/sign_up_screen.dart'
+import 'package:bogge_app/ui/screens/unauthorized/sign_up_confirmation_screen/sign_up_confirmation_screen.dart'
     as _i15;
+import 'package:bogge_app/ui/screens/unauthorized/sign_up_screen/sign_up_screen.dart'
+    as _i16;
 import 'package:bogge_app/ui/screens/unauthorized/welcome_screen/welcome_screen.dart'
-    as _i17;
-import 'package:flutter/material.dart' as _i19;
+    as _i19;
+import 'package:flutter/material.dart' as _i21;
 
 /// generated route for
 /// [_i1.AuthorizedLoadScreen]
-class AuthorizedLoadRoute extends _i18.PageRouteInfo<void> {
-  const AuthorizedLoadRoute({List<_i18.PageRouteInfo>? children})
+class AuthorizedLoadRoute extends _i20.PageRouteInfo<void> {
+  const AuthorizedLoadRoute({List<_i20.PageRouteInfo>? children})
     : super(AuthorizedLoadRoute.name, initialChildren: children);
 
   static const String name = 'AuthorizedLoadRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
       return const _i1.AuthorizedLoadScreen();
@@ -64,13 +67,13 @@ class AuthorizedLoadRoute extends _i18.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.CreateNewPasswordScreen]
-class CreateNewPasswordRoute extends _i18.PageRouteInfo<void> {
-  const CreateNewPasswordRoute({List<_i18.PageRouteInfo>? children})
+class CreateNewPasswordRoute extends _i20.PageRouteInfo<void> {
+  const CreateNewPasswordRoute({List<_i20.PageRouteInfo>? children})
     : super(CreateNewPasswordRoute.name, initialChildren: children);
 
   static const String name = 'CreateNewPasswordRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
       return const _i2.CreateNewPasswordScreen();
@@ -80,13 +83,13 @@ class CreateNewPasswordRoute extends _i18.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.GuestWelcomeScreen]
-class GuestWelcomeRoute extends _i18.PageRouteInfo<void> {
-  const GuestWelcomeRoute({List<_i18.PageRouteInfo>? children})
+class GuestWelcomeRoute extends _i20.PageRouteInfo<void> {
+  const GuestWelcomeRoute({List<_i20.PageRouteInfo>? children})
     : super(GuestWelcomeRoute.name, initialChildren: children);
 
   static const String name = 'GuestWelcomeRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
       return const _i3.GuestWelcomeScreen();
@@ -95,125 +98,141 @@ class GuestWelcomeRoute extends _i18.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i4.OnboardingAgeScreen]
-class OnboardingAgeRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingAgeRoute({List<_i18.PageRouteInfo>? children})
+/// [_i4.HomeScreen]
+class HomeRoute extends _i20.PageRouteInfo<void> {
+  const HomeRoute({List<_i20.PageRouteInfo>? children})
+    : super(HomeRoute.name, initialChildren: children);
+
+  static const String name = 'HomeRoute';
+
+  static _i20.PageInfo page = _i20.PageInfo(
+    name,
+    builder: (data) {
+      return const _i4.HomeScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [_i5.OnboardingAgeScreen]
+class OnboardingAgeRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingAgeRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingAgeRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingAgeRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i4.OnboardingAgeScreen();
+      return const _i5.OnboardingAgeScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i5.OnboardingAppleHealthScreen]
-class OnboardingAppleHealthRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingAppleHealthRoute({List<_i18.PageRouteInfo>? children})
+/// [_i6.OnboardingAppleHealthScreen]
+class OnboardingAppleHealthRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingAppleHealthRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingAppleHealthRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingAppleHealthRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i5.OnboardingAppleHealthScreen();
+      return const _i6.OnboardingAppleHealthScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i6.OnboardingGenderScreen]
-class OnboardingGenderRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingGenderRoute({List<_i18.PageRouteInfo>? children})
+/// [_i7.OnboardingGenderScreen]
+class OnboardingGenderRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingGenderRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingGenderRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingGenderRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i6.OnboardingGenderScreen();
+      return const _i7.OnboardingGenderScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i7.OnboardingHeightScreen]
-class OnboardingHeightRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingHeightRoute({List<_i18.PageRouteInfo>? children})
+/// [_i8.OnboardingHeightScreen]
+class OnboardingHeightRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingHeightRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingHeightRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingHeightRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i7.OnboardingHeightScreen();
+      return const _i8.OnboardingHeightScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i8.OnboardingNameScreen]
-class OnboardingNameRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingNameRoute({List<_i18.PageRouteInfo>? children})
+/// [_i9.OnboardingNameScreen]
+class OnboardingNameRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingNameRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingNameRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingNameRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i8.OnboardingNameScreen();
+      return const _i9.OnboardingNameScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i9.OnboardingScreen]
-class OnboardingRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingRoute({List<_i18.PageRouteInfo>? children})
+/// [_i10.OnboardingScreen]
+class OnboardingRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i9.OnboardingScreen();
+      return const _i10.OnboardingScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i10.OnboardingWeightScreen]
-class OnboardingWeightRoute extends _i18.PageRouteInfo<void> {
-  const OnboardingWeightRoute({List<_i18.PageRouteInfo>? children})
+/// [_i11.OnboardingWeightScreen]
+class OnboardingWeightRoute extends _i20.PageRouteInfo<void> {
+  const OnboardingWeightRoute({List<_i20.PageRouteInfo>? children})
     : super(OnboardingWeightRoute.name, initialChildren: children);
 
   static const String name = 'OnboardingWeightRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i10.OnboardingWeightScreen();
+      return const _i11.OnboardingWeightScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i11.ResetPasswordConformEmailScreen]
+/// [_i12.ResetPasswordConformEmailScreen]
 class ResetPasswordConformEmailRoute
-    extends _i18.PageRouteInfo<ResetPasswordConformEmailRouteArgs> {
+    extends _i20.PageRouteInfo<ResetPasswordConformEmailRouteArgs> {
   ResetPasswordConformEmailRoute({
     required String email,
-    _i19.Key? key,
-    List<_i18.PageRouteInfo>? children,
+    _i21.Key? key,
+    List<_i20.PageRouteInfo>? children,
   }) : super(
          ResetPasswordConformEmailRoute.name,
          args: ResetPasswordConformEmailRouteArgs(email: email, key: key),
@@ -222,11 +241,11 @@ class ResetPasswordConformEmailRoute
 
   static const String name = 'ResetPasswordConformEmailRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<ResetPasswordConformEmailRouteArgs>();
-      return _i11.ResetPasswordConformEmailScreen(
+      return _i12.ResetPasswordConformEmailScreen(
         email: args.email,
         key: args.key,
       );
@@ -239,7 +258,7 @@ class ResetPasswordConformEmailRouteArgs {
 
   final String email;
 
-  final _i19.Key? key;
+  final _i21.Key? key;
 
   @override
   String toString() {
@@ -258,45 +277,45 @@ class ResetPasswordConformEmailRouteArgs {
 }
 
 /// generated route for
-/// [_i12.ResetPasswordScreen]
-class ResetPasswordRoute extends _i18.PageRouteInfo<void> {
-  const ResetPasswordRoute({List<_i18.PageRouteInfo>? children})
+/// [_i13.ResetPasswordScreen]
+class ResetPasswordRoute extends _i20.PageRouteInfo<void> {
+  const ResetPasswordRoute({List<_i20.PageRouteInfo>? children})
     : super(ResetPasswordRoute.name, initialChildren: children);
 
   static const String name = 'ResetPasswordRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i12.ResetPasswordScreen();
+      return const _i13.ResetPasswordScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i13.SignInScreen]
-class SignInRoute extends _i18.PageRouteInfo<void> {
-  const SignInRoute({List<_i18.PageRouteInfo>? children})
+/// [_i14.SignInScreen]
+class SignInRoute extends _i20.PageRouteInfo<void> {
+  const SignInRoute({List<_i20.PageRouteInfo>? children})
     : super(SignInRoute.name, initialChildren: children);
 
   static const String name = 'SignInRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i13.SignInScreen();
+      return const _i14.SignInScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i14.SignUpConfirmationScreen]
+/// [_i15.SignUpConfirmationScreen]
 class SignUpConfirmationRoute
-    extends _i18.PageRouteInfo<SignUpConfirmationRouteArgs> {
+    extends _i20.PageRouteInfo<SignUpConfirmationRouteArgs> {
   SignUpConfirmationRoute({
     required String email,
-    _i19.Key? key,
-    List<_i18.PageRouteInfo>? children,
+    _i21.Key? key,
+    List<_i20.PageRouteInfo>? children,
   }) : super(
          SignUpConfirmationRoute.name,
          args: SignUpConfirmationRouteArgs(email: email, key: key),
@@ -305,11 +324,11 @@ class SignUpConfirmationRoute
 
   static const String name = 'SignUpConfirmationRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<SignUpConfirmationRouteArgs>();
-      return _i14.SignUpConfirmationScreen(email: args.email, key: args.key);
+      return _i15.SignUpConfirmationScreen(email: args.email, key: args.key);
     },
   );
 }
@@ -319,7 +338,7 @@ class SignUpConfirmationRouteArgs {
 
   final String email;
 
-  final _i19.Key? key;
+  final _i21.Key? key;
 
   @override
   String toString() {
@@ -338,49 +357,65 @@ class SignUpConfirmationRouteArgs {
 }
 
 /// generated route for
-/// [_i15.SignUpScreen]
-class SignUpRoute extends _i18.PageRouteInfo<void> {
-  const SignUpRoute({List<_i18.PageRouteInfo>? children})
+/// [_i16.SignUpScreen]
+class SignUpRoute extends _i20.PageRouteInfo<void> {
+  const SignUpRoute({List<_i20.PageRouteInfo>? children})
     : super(SignUpRoute.name, initialChildren: children);
 
   static const String name = 'SignUpRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i15.SignUpScreen();
+      return const _i16.SignUpScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i16.SplashScreen]
-class SplashRoute extends _i18.PageRouteInfo<void> {
-  const SplashRoute({List<_i18.PageRouteInfo>? children})
+/// [_i17.SplashScreen]
+class SplashRoute extends _i20.PageRouteInfo<void> {
+  const SplashRoute({List<_i20.PageRouteInfo>? children})
     : super(SplashRoute.name, initialChildren: children);
 
   static const String name = 'SplashRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i16.SplashScreen();
+      return const _i17.SplashScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i17.WelcomeScreen]
-class WelcomeRoute extends _i18.PageRouteInfo<void> {
-  const WelcomeRoute({List<_i18.PageRouteInfo>? children})
+/// [_i18.UserProfileScreen]
+class UserProfileRoute extends _i20.PageRouteInfo<void> {
+  const UserProfileRoute({List<_i20.PageRouteInfo>? children})
+    : super(UserProfileRoute.name, initialChildren: children);
+
+  static const String name = 'UserProfileRoute';
+
+  static _i20.PageInfo page = _i20.PageInfo(
+    name,
+    builder: (data) {
+      return const _i18.UserProfileScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [_i19.WelcomeScreen]
+class WelcomeRoute extends _i20.PageRouteInfo<void> {
+  const WelcomeRoute({List<_i20.PageRouteInfo>? children})
     : super(WelcomeRoute.name, initialChildren: children);
 
   static const String name = 'WelcomeRoute';
 
-  static _i18.PageInfo page = _i18.PageInfo(
+  static _i20.PageInfo page = _i20.PageInfo(
     name,
     builder: (data) {
-      return const _i17.WelcomeScreen();
+      return const _i19.WelcomeScreen();
     },
   );
 }

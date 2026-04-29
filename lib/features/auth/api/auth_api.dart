@@ -25,11 +25,12 @@ abstract class AuthRepository {
   getConfirmCode();
   Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
   confirmEmail();
-  Future<void> logout();
   Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
   forgotPassword();
   Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
   resetPassword();
+  Future<void> logout();
+  Future<void> checkToken();
 }
 
 class AuthRepositoryAPI implements AuthRepository {
@@ -273,5 +274,26 @@ class AuthRepositoryAPI implements AuthRepository {
     }
 
     return response;
+  }
+
+  @override
+  Future<TokenStatus> checkToken() async {
+    await ref.read(httpProvider.notifier).setHeaders();
+    final response = await ref
+        .read(httpProvider.notifier)
+        .post(
+          query: '$path/check',
+          type: AuthType.bearer,
+          errorMapper: BackendErrorCodeX.fromCode,
+          successMapper: AuthSuccessCodeX.fromCode,
+        );
+
+    if (!response.success) {
+      return TokenStatus.inactive;
+    }
+
+    return response.data["valid"] == true
+        ? TokenStatus.active
+        : TokenStatus.inactive;
   }
 }

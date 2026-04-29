@@ -31,6 +31,8 @@ dependencies:
   pin_code_fields: ^9.3.0
   string_extensions: ^0.8.4
   json_annotation: ^4.11.0
+  calendar_date_picker2: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:

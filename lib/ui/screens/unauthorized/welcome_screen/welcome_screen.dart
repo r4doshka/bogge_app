@@ -53,7 +53,7 @@ class WelcomeScreen extends ConsumerWidget {
                       color: palette.white60,
                     ),
                   ),
-                  SizedBox(height: 170.h),
+                  SizedBox(height: 178.h),
                   PrimaryButton(
                     text: 'Создать учетную запись'.tr(),
                     onPress: () => context.router.push(SignUpRoute()),
@@ -63,6 +63,7 @@ class WelcomeScreen extends ConsumerWidget {
                     text: 'Войти'.tr(),
                     onPress: () => context.router.push(SignInRoute()),
                   ),
+                  AppSpace.h16,
                 ],
               ),
             ),

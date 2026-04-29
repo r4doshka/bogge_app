@@ -5,6 +5,7 @@ import 'package:bogge_app/models/api_response.dart';
 import 'package:bogge_app/models/request_error_model.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
 import 'package:bogge_app/providers/environment_service_provider.dart';
+import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/services/network_connectivity_notifier.dart';
 import 'package:bogge_app/utils/enums.dart';
@@ -40,12 +41,15 @@ class DioStateNotifier extends StateNotifier<Dio> {
         ),
       ) {
     _setInterceptors();
-    setHeaders();
   }
 
-  getHeaders() => state.options.headers;
+  Map<String, dynamic> getHeaders() => state.options.headers;
 
   Future<void> setHeaders() async {
+    final storage = ref.read(storageServiceProvider);
+    final token = await storage.readAccessToken();
+    accessToken = token;
+
     if ((accessToken ?? '').isNotEmpty) {
       state.options.headers['Authorization'] = 'Bearer $accessToken';
     }
@@ -194,13 +198,7 @@ class DioStateNotifier extends StateNotifier<Dio> {
   Map<String, dynamic> _header({required AuthType type}) {
     return {
       "content-type": "application/json",
-      if (type == AuthType.bearer)
-        "Authorization": "Bearer $accessToken"
-      else if (type == AuthType.basic)
-        "Authorization": basicToken
-      else if (type == AuthType.failBearer)
-        "Authorization":
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDAyNDcxMTIsInVzZXJfbmFtZSI6InJvbTRpazIzNUBnbWFpbC5jb20iLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiNTM3OGNmZTctNzc2Ni00NDAzLWFkYWItNDg3ZTdjMTdiZGNkIiwiY2xpZW50X2lkIjoiZXhhbXBsZUNsaWVudCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSIsInRydXN0Il19._vJUWZZ0XKAzj2Ep85f_U8xGyLz1jdUBgvwVImF0KYw",
+      if (type == AuthType.bearer) "Authorization": "Bearer $accessToken",
     };
   }
 
@@ -294,15 +292,15 @@ class DioStateNotifier extends StateNotifier<Dio> {
           return handler.next(options);
         },
         onResponse: (response, handler) async {
-          final options = response.requestOptions;
-          debugPrint(
-            "\n---------- DioResponse ----------"
-            "\n\turl: ${options.baseUrl}${options.path}"
-            "\n\tmethod: ${options.method}"
-            "\n\\statusCode: ${response.statusCode}"
-            "\n\tresponse: $response"
-            "\n--------------------------------\n",
-          );
+          // final options = response.requestOptions;
+          // debugPrint(
+          //   "\n---------- DioResponse ----------"
+          //   "\n\turl: ${options.baseUrl}${options.path}"
+          //   "\n\tmethod: ${options.method}"
+          //   "\n\\statusCode: ${response.statusCode}"
+          //   "\n\tresponse: $response"
+          //   "\n--------------------------------\n",
+          // );
           return handler.next(response);
         },
         onError: (DioException error, ErrorInterceptorHandler handler) async {
@@ -375,33 +373,6 @@ class DioStateNotifier extends StateNotifier<Dio> {
   //     } else {
   //       throw Exception("Internet Error");
   //     }
-  //   }
-  // }
-
-  // @override
-  // Future<TokenStatus> checkToken() async {
-  //   try {
-  //     String? token = await Storage.readAccessToken();
-  //     if (token == null) return TokenStatus.inactive;
-
-  //     final cf = await Storage.readCookieHeader();
-  //     final responseData = await _sendRequest(
-  //       _dio.post(
-  //         "/security/oauth/check_token?token=$token",
-  //         options: Options(
-  //           headers: {"Authorization": basicToken, 'cookie': cf},
-  //           extra: {'authType': AuthType.Basic},
-  //         ),
-  //       ),
-  //     );
-  //     accessToken = token;
-  //     return responseData["active"] == true
-  //         ? TokenStatus.active
-  //         : TokenStatus.inactive;
-  //   } catch (e, stack) {
-  //     debugPrint('checkToken error =========> $e');
-  //     debugPrint('checkToken stack =========> $stack');
-  //     return TokenStatus.inactive;
   //   }
   // }
 }
