@@ -3,7 +3,14 @@ import 'package:bogge_app/providers/navigation/routers/un_authorized/un_authoriz
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-enum AuthSuccessCode { confirmationCodeSent, confirmationCodeResent, unknown }
+enum AuthSuccessCode {
+  confirmationCodeSent,
+  confirmationCodeResent,
+  loginSuccess,
+  resetPasswordSuccess,
+  forgotPasswordSent,
+  unknown,
+}
 
 extension AuthSuccessCodeX on AuthSuccessCode {
   static AuthSuccessCode fromCode(String? code) {
@@ -12,6 +19,12 @@ extension AuthSuccessCodeX on AuthSuccessCode {
         return AuthSuccessCode.confirmationCodeSent;
       case 'CONFIRMATION_CODE_RESENT':
         return AuthSuccessCode.confirmationCodeResent;
+      case 'LOGIN_SUCCESS':
+        return AuthSuccessCode.loginSuccess;
+      case 'PASSWORD_RESET_SUCCESS':
+        return AuthSuccessCode.resetPasswordSuccess;
+      case 'FORGOT_PASSWORD_SENT':
+        return AuthSuccessCode.forgotPasswordSent;
       default:
         return AuthSuccessCode.unknown;
     }
@@ -29,6 +42,15 @@ void handleFormSuccess({
       context.router.push(SignUpConfirmationRoute(email: email));
       break;
 
+    case AuthSuccessCode.forgotPasswordSent:
+      context.router.push(ResetPasswordConformEmailRoute(email: email));
+      break;
+
+    case AuthSuccessCode.loginSuccess:
+      break;
+
+    case AuthSuccessCode.resetPasswordSuccess:
+      break;
     case AuthSuccessCode.unknown:
       ScaffoldMessenger.of(
         context,

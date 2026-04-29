@@ -109,7 +109,6 @@ class DioStateNotifier extends StateNotifier<Dio> {
     final client = baseUrl != null
         ? _createDioInstance(baseUrl: baseUrl)
         : state;
-
     return await _sendRequest(
       client.post(
         query,
@@ -220,7 +219,6 @@ class DioStateNotifier extends StateNotifier<Dio> {
       );
     } on DioException catch (error) {
       final data = error.response?.data;
-
       if (data is Map<String, dynamic>) {
         return ApiResponse<T, E, S>.fromJson(
           data,
@@ -228,7 +226,6 @@ class DioStateNotifier extends StateNotifier<Dio> {
           successMapper: successMapper,
         );
       }
-
       throw RequestErrorModel(
         errorMessage: error.message,
         responseStatus: error.response?.statusCode,

@@ -80,6 +80,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
 
             final hasErrors =
                 control.invalid && (control.touched || control.dirty);
+
             return AnimatedContainer(
               height: containerHeight ?? 54.h,
               duration: const Duration(milliseconds: 150),
@@ -99,8 +100,9 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                 onChanged: onChanged,
                 obscureText: obscureText,
                 obscuringCharacter: '*',
-                showErrors: (control) =>
-                    control.invalid && (control.touched || control.dirty),
+                showErrors: (control) => false,
+                // showErrors: (control) =>
+                //     control.invalid && (control.touched || control.dirty),
                 decoration: InputDecoration(
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -115,7 +117,11 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                   filled: false,
                   fillColor: Colors.transparent,
                   errorText: null,
-                  errorStyle: const TextStyle(height: 0, fontSize: 0),
+                  errorStyle: const TextStyle(
+                    height: 0,
+                    fontSize: 0,
+                    color: Colors.transparent,
+                  ),
                   floatingLabelStyle: text_s11_w400_ls01.copyWith(
                     color: palette.text30,
                   ),
@@ -167,7 +173,6 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                   .toList();
 
               if (errorTexts.isEmpty) return const SizedBox();
-
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

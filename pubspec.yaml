@@ -28,6 +28,8 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   reactive_forms: ^18.2.2
   url_launcher: ^6.3.2
+  pin_code_fields: ^9.3.0
+  string_extensions: ^0.8.4
 
 dev_dependencies:
   flutter_test:

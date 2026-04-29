@@ -1,3 +1,5 @@
+import 'package:bogge_app/providers/auth/auth_provider.dart';
+import 'package:bogge_app/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

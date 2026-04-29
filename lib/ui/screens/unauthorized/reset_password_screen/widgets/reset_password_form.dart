@@ -1,5 +1,5 @@
-import 'package:bogge_app/features/auth/models/sign_in_state.dart';
-import 'package:bogge_app/features/auth/providers/sign_in_provider.dart';
+import 'package:bogge_app/features/auth/models/reset_password_state.dart';
+import 'package:bogge_app/features/auth/providers/reset_password_provider.dart';
 import 'package:bogge_app/ui/widgets/form/requirement_item.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/widgets/form/reactive_form/reactive_input_field.dart';
@@ -9,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class SignInForm extends ConsumerWidget {
-  const SignInForm({super.key});
+class ResetPasswordForm extends ConsumerWidget {
+  const ResetPasswordForm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(signInStateProvider);
+    final state = ref.watch(resetPasswordStateProvider);
 
     return Column(
       children: [
@@ -26,19 +26,11 @@ class SignInForm extends ConsumerWidget {
           hiddenErrors: ['email', 'required'],
         ),
         AppSpace.h8,
-        ReactiveInputField<String>(
-          fieldName: state.passwordField,
-          labelText: 'Пароль'.tr(),
-          keyboardType: TextInputType.visiblePassword,
-          hiddenErrors: ['minLength', 'required', 'noSpecialChars'],
-          obscureText: true,
-        ),
-        AppSpace.h8,
         ReactiveFormConsumer(
           builder: (context, form, _) {
-            final passwordControl = form.control(SignInState.passwordFieldName);
-            final emailControl = form.control(SignInState.emailFieldName);
-
+            final emailControl = form.control(
+              ResetPasswordState.emailFieldName,
+            );
             return Padding(
               padding: AppSpace.ph16,
               child: Column(
@@ -48,13 +40,6 @@ class SignInForm extends ConsumerWidget {
                       isValid: false,
                       text: 'Неверный Email'.tr(),
                     ),
-                  if (passwordControl.hasErrors && passwordControl.touched) ...[
-                    AppSpace.h4,
-                    RequirementItem(
-                      isValid: false,
-                      text: 'Неверный пароль'.tr(),
-                    ),
-                  ],
                 ],
               ),
             );

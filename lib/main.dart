@@ -48,7 +48,7 @@ class MainApp extends HookConsumerWidget {
       minTextAdapt: true,
       builder: (context, child) => ValueListenableBuilder<AppRouter>(
         valueListenable: router,
-        builder: (_, appRouter, __) {
+        builder: (_, appRouter, _) {
           return MaterialApp.router(
             theme: ThemeData(
               fontFamily: "HarmonyOsSans",

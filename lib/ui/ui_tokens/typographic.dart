@@ -173,6 +173,15 @@ final text_s14_w700_ls01 = TextStyle(
 );
 
 // ignore: non_constant_identifier_names
+final text_s13_w400_lsm043 = TextStyle(
+  fontSize: 13.sp,
+  height: 22.h / 13.h,
+  fontWeight: FontWeight.w400,
+  fontFamily: "Inter",
+  letterSpacing: -0.43.w,
+);
+
+// ignore: non_constant_identifier_names
 final text_s12_w400_ls01 = TextStyle(
   fontSize: 12.sp,
   height: 14.h / 12.h,

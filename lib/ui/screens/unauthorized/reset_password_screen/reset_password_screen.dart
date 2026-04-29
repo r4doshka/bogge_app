@@ -1,31 +1,30 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/features/auth/api/auth_api.dart';
-import 'package:bogge_app/features/auth/models/sign_up_state.dart';
-import 'package:bogge_app/features/auth/providers/sign_up_provider.dart';
 import 'package:bogge_app/features/auth/api/backend_success_code_parser.dart';
+import 'package:bogge_app/features/auth/models/reset_password_state.dart';
+import 'package:bogge_app/features/auth/providers/reset_password_provider.dart';
 import 'package:bogge_app/helpers/handle_request_failure.dart';
 import 'package:bogge_app/models/request_error_model.dart';
-import 'package:bogge_app/services/navigation_service.dart';
-import 'package:bogge_app/ui/screens/unauthorized/sign_up_screen/widgets/sign_up_form.dart';
+import 'package:bogge_app/providers/theme/palette_provider.dart';
+import 'package:bogge_app/ui/screens/unauthorized/reset_password_screen/widgets/reset_password_form.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
+import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_button.dart';
 import 'package:bogge_app/ui/widgets/containers/dismiss_keyboard_container.dart';
 import 'package:bogge_app/ui/widgets/headers/common_header.dart';
-import 'package:bogge_app/ui/widgets/terms_text.dart';
-import 'package:bogge_app/features/auth/api/backend_error_code_parser.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage()
-class SignUpScreen extends ConsumerWidget {
-  const SignUpScreen({super.key});
+class ResetPasswordScreen extends ConsumerWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(signUpStateProvider);
-    final navigationService = ref.read(navigationServiceProvider);
+    final palette = ref.watch(paletteProvider);
+    final state = ref.watch(resetPasswordStateProvider);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -33,24 +32,33 @@ class SignUpScreen extends ConsumerWidget {
           child: Padding(
             padding: AppSpace.ph16,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CommonHeader(
-                  title: 'Регистрация'.tr(),
-                  onPop: () => navigationService.goToUnAuthorizedMode(context),
+                CommonHeader(),
+                AppSpace.h16,
+                Text(
+                  'Восстановление пароля'.tr(),
+                  style: text_s25_w700_ls04.copyWith(color: palette.text),
+                ),
+                AppSpace.h16,
+                Text(
+                  'Введите email который вы использовали при регистрации Мы отправим инструкции для сброса пароля'
+                      .tr(),
+                  style: text_s14_w400_ls01.copyWith(color: palette.text60),
+                  textAlign: TextAlign.center,
                 ),
                 AppSpace.h24,
                 ReactiveForm(
-                  formGroup: state.signUpForm,
+                  formGroup: state.resetPasswordForm,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SignUpForm(),
+                      ResetPasswordForm(),
                       AppSpace.h32,
                       ReactiveFormConsumer(
-                        builder: (context, form, child) {
+                        builder: (context, form, _) {
                           return PrimaryButton(
-                            text: 'Создать учетную запись'.tr(),
-                            onPress: form.valid && form.dirty
+                            text: 'Отправить письмо'.tr(),
+                            onPress: form.valid
                                 ? () => handleSubmit(
                                     context: context,
                                     ref: ref,
@@ -63,8 +71,6 @@ class SignUpScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                AppSpace.h16,
-                Padding(padding: AppSpace.ph16, child: TermsText()),
               ],
             ),
           ),
@@ -80,21 +86,19 @@ class SignUpScreen extends ConsumerWidget {
   }) async {
     try {
       FocusScope.of(context).unfocus();
-      final state = ref.read(signUpStateProvider);
-      final String email = state.signUpForm
-          .control(SignUpState.emailFieldName)
+      final state = ref.read(resetPasswordStateProvider);
+      final String email = state.resetPasswordForm
+          .control(ResetPasswordState.emailFieldName)
           .value;
 
-      final response = await ref.read(authRepository).signUp();
+      final response = await ref.read(authRepository).forgotPassword();
 
       if (!context.mounted) return;
 
       if (!response.success) {
-        handleFormError(
-          code: BackendErrorCodeX.fromCode(response.code),
-          form: form,
-          context: context,
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
         return;
       }
 
@@ -107,7 +111,7 @@ class SignUpScreen extends ConsumerWidget {
       if (!context.mounted) return;
 
       handleRequestFailure(context: context, failureType: e.failureType);
-    } catch (_) {
+    } catch (error, _) {
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(

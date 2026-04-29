@@ -1,6 +1,6 @@
 import 'package:bogge_app/features/auth/models/sign_up_state.dart';
 import 'package:bogge_app/features/auth/providers/sign_up_provider.dart';
-import 'package:bogge_app/ui/screens/unauthorized/sign_up_screen/widgets/requirement_item.dart';
+import 'package:bogge_app/ui/widgets/form/requirement_item.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/widgets/form/reactive_form/reactive_input_field.dart';
 import 'package:bogge_app/utils/formatters/email_input_formatter.dart';
@@ -26,7 +26,6 @@ class SignUpForm extends ConsumerWidget {
           hiddenErrors: ['required'],
           validationMessages: {
             ValidationMessage.email: (_) => 'Неверный Email'.tr(),
-            'emailInvalid': (_) => 'Неверный Email'.tr(),
           },
         ),
         AppSpace.h8,
@@ -51,18 +50,21 @@ class SignUpForm extends ConsumerWidget {
             );
             final hasMinLength = !passwordControl.hasError('minLength');
 
-            return Column(
-              children: [
-                RequirementItem(
-                  isValid: hasMinLength,
-                  text: 'Минимум 8 символов'.tr(),
-                ),
-                AppSpace.h4,
-                RequirementItem(
-                  isValid: hasNoSpecialChars,
-                  text: 'Без специальных знаков'.tr(),
-                ),
-              ],
+            return Padding(
+              padding: AppSpace.ph16,
+              child: Column(
+                children: [
+                  RequirementItem(
+                    isValid: hasMinLength,
+                    text: 'Минимум 8 символов'.tr(),
+                  ),
+                  AppSpace.h4,
+                  RequirementItem(
+                    isValid: hasNoSpecialChars,
+                    text: 'Без специальных знаков'.tr(),
+                  ),
+                ],
+              ),
             );
           },
         ),

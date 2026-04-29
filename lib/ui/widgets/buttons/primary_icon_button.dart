@@ -1,7 +1,10 @@
+import 'package:bogge_app/providers/theme/palette_provider.dart';
+import 'package:bogge_app/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class PrimaryIconButton extends StatelessWidget {
+class PrimaryIconButton extends ConsumerWidget {
   final String svgPath;
   final Color? svgColor;
   final double? iconWidth;
@@ -14,6 +17,7 @@ class PrimaryIconButton extends StatelessWidget {
   final bool matchTextDirection;
   final BoxBorder? border;
   final EdgeInsetsDirectional? padding;
+  final Color? highlightColor;
 
   const PrimaryIconButton({
     super.key,
@@ -29,10 +33,13 @@ class PrimaryIconButton extends StatelessWidget {
     this.border,
     this.padding,
     this.borderRadius,
+    this.highlightColor,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final palette = ref.read(paletteProvider);
+
     return Material(
       borderRadius:
           borderRadius ??
@@ -43,6 +50,8 @@ class PrimaryIconButton extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       child: InkWell(
         onTap: onPress,
+        splashColor: highlightColor ?? palette.text.withSafeOpacity(0.1),
+        highlightColor: highlightColor ?? palette.text.withSafeOpacity(0.1),
         child: Ink(
           padding: padding,
           width: containerWidth,

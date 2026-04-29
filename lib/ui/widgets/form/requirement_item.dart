@@ -9,8 +9,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class RequirementItem extends ConsumerWidget {
   final bool isValid;
   final String text;
+  final Color? svgColor;
 
-  const RequirementItem({super.key, required this.isValid, required this.text});
+  const RequirementItem({
+    super.key,
+    required this.isValid,
+    required this.text,
+    this.svgColor,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,6 +30,9 @@ class RequirementItem extends ConsumerWidget {
               : 'assets/icons/cross-icon.svg',
           width: AppSpace.s20.w,
           height: AppSpace.s20.h,
+          colorFilter: svgColor != null
+              ? ColorFilter.mode(svgColor!, BlendMode.srcIn)
+              : null,
         ),
         AppSpace.w4,
         Text(text, style: text_s11_w400_lsm043.copyWith(color: palette.text30)),

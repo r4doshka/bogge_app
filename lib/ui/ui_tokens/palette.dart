@@ -40,6 +40,8 @@ class AppPalette {
   final Color bgLight;
   final Color bgDark;
 
+  final Color delete;
+
   const AppPalette({
     required this.primary,
     required this.primary60,
@@ -72,6 +74,7 @@ class AppPalette {
     required this.gray3,
     required this.bgLight,
     required this.bgDark,
+    required this.delete,
   });
 
   const AppPalette.dark()
@@ -112,5 +115,6 @@ class AppPalette {
       gray3 = const Color(0xffC5C2C2),
 
       bgLight = const Color(0xffF4F2EE),
-      bgDark = const Color(0xff171412);
+      bgDark = const Color(0xff171412),
+      delete = const Color(0xffFFAE00);
 }

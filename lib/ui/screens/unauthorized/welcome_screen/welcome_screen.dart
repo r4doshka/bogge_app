@@ -22,33 +22,51 @@ class WelcomeScreen extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: Padding(
-          padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpace.s34.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SvgPicture.asset(
-                'assets/icons/logo-icon.svg',
-                width: 262.w,
-                height: 71.h,
+        child: Stack(
+          children: [
+            PositionedDirectional(
+              top: 0,
+              end: 0,
+              bottom: 0,
+              start: 0,
+              child: Image.asset(
+                'assets/images/welcome-image.png',
+                fit: BoxFit.fill,
               ),
-              AppSpace.h14,
-              Text(
-                'Твой ритм движения'.tr(),
-                style: text_s17_w600_lsm043.copyWith(color: palette.white60),
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: AppSpace.s34.w,
               ),
-              SizedBox(height: 170.h),
-              PrimaryButton(
-                text: 'Создать учетную запись'.tr(),
-                onPress: () => context.router.push(SignUpRoute()),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/logo-icon.svg',
+                    width: 262.w,
+                    height: 71.h,
+                  ),
+                  AppSpace.h14,
+                  Text(
+                    'Твой ритм движения'.tr(),
+                    style: text_s17_w600_lsm043.copyWith(
+                      color: palette.white60,
+                    ),
+                  ),
+                  SizedBox(height: 170.h),
+                  PrimaryButton(
+                    text: 'Создать учетную запись'.tr(),
+                    onPress: () => context.router.push(SignUpRoute()),
+                  ),
+                  AppSpace.h8,
+                  SecondaryButton(
+                    text: 'Войти'.tr(),
+                    onPress: () => context.router.push(SignInRoute()),
+                  ),
+                ],
               ),
-              AppSpace.h8,
-              SecondaryButton(
-                text: 'Войти'.tr(),
-                onPress: () => context.router.push(SignInRoute()),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -741,6 +741,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
+  pin_code_fields:
+    dependency: "direct main"
+    description:
+      name: pin_code_fields
+      sha256: "8e919c5093b326d1a2d39d62d88572aa4a79b3567b1ed11ada74ee4872444f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.3.0"
   platform:
     dependency: transitive
     description:
@@ -994,6 +1002,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  string_extensions:
+    dependency: "direct main"
+    description:
+      name: string_extensions
+      sha256: f35136a387a2530d8d54ee8f41b62fe7d8e1080f0d442356514968cacfa8870a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.4"
   string_scanner:
     dependency: transitive
     description:

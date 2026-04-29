@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/features/auth/api/auth_api.dart';
-import 'package:bogge_app/features/auth/api/backend_error_code_parser.dart';
-import 'package:bogge_app/features/auth/models/sign_up_state.dart';
-import 'package:bogge_app/features/auth/providers/sign_up_provider.dart';
+import 'package:bogge_app/features/auth/models/reset_password_state.dart';
+import 'package:bogge_app/features/auth/providers/reset_password_provider.dart';
 import 'package:bogge_app/helpers/handle_request_failure.dart';
 import 'package:bogge_app/models/request_error_model.dart';
+import 'package:bogge_app/providers/navigation/routers/un_authorized/un_authorized_router.gr.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
-import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/containers/dismiss_keyboard_container.dart';
@@ -18,21 +17,22 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class SignUpConfirmationScreen extends ConsumerStatefulWidget {
+class ResetPasswordConformEmailScreen extends ConsumerStatefulWidget {
   final String email;
-  const SignUpConfirmationScreen({required this.email, super.key});
+  const ResetPasswordConformEmailScreen({required this.email, super.key});
 
   @override
-  ConsumerState<SignUpConfirmationScreen> createState() =>
-      SignUpConfirmationState();
+  ConsumerState<ResetPasswordConformEmailScreen> createState() =>
+      ResetPasswordConformEmailState();
 }
 
-class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
+class ResetPasswordConformEmailState
+    extends ConsumerState<ResetPasswordConformEmailScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = ref.watch(paletteProvider);
-    final stateNotifier = ref.read(signUpStateProvider.notifier);
-    final state = ref.watch(signUpStateProvider);
+    final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
+    final state = ref.watch(resetPasswordStateProvider);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -41,12 +41,7 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
             padding: AppSpace.ph16,
             child: Column(
               children: [
-                CommonHeader(
-                  onPop: () {
-                    stateNotifier.clearConfirmCodeFlow();
-                    context.pop();
-                  },
-                ),
+                CommonHeader(),
                 AppSpace.h16,
                 Text(
                   'Проверочный код'.tr(),
@@ -86,7 +81,9 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
                 AppSpace.h24,
                 ResendTimer(
                   handleResendCode,
-                  state.signUpForm.control(SignUpState.emailFieldName).value,
+                  state.resetPasswordForm
+                      .control(ResetPasswordState.emailFieldName)
+                      .value,
                 ),
               ],
             ),
@@ -98,20 +95,18 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
 
   void handleResendCode() async {
     try {
-      final response = await ref.read(authRepository).getConfirmCode();
+      final response = await ref.read(authRepository).forgotPassword();
+      final state = ref.watch(resetPasswordStateProvider.notifier);
+      state.clearConfirmCodeFlow();
 
       if (!mounted) return;
 
       if (!response.success) {
-        handleFormError(
-          code: BackendErrorCodeX.fromCode(response.code),
-          context: context,
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
         return;
       }
-
-      final navigationService = ref.read(navigationServiceProvider);
-      navigationService.goToAuthorizedMode(context);
     } on RequestErrorModel catch (e) {
       if (!mounted) return;
       handleRequestFailure(context: context, failureType: e.failureType);
@@ -126,24 +121,12 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
 
   void handleSubmit() async {
     try {
-      final stateNotifier = ref.read(signUpStateProvider.notifier);
+      final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
 
       final isValid = stateNotifier.validateConfirmCode();
       if (!isValid) return;
 
-      final response = await ref.read(authRepository).confirmEmail();
-
-      if (!response.success) {
-        stateNotifier.setConfirmCodeError();
-        return;
-      }
-      if (!mounted) return;
-
-      final navigationService = ref.read(navigationServiceProvider);
-      navigationService.goToAuthorizedMode(context);
-    } on RequestErrorModel catch (e) {
-      if (!mounted) return;
-      handleRequestFailure(context: context, failureType: e.failureType);
+      context.router.push(CreateNewPasswordRoute());
     } catch (_) {
       if (!mounted) return;
 

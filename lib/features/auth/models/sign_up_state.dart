@@ -7,10 +7,15 @@ class SignUpState {
   static final passwordFieldName = 'password';
   static final emailFieldName = 'email';
 
-  final bool submitted;
   final FormGroup signUpForm;
+  final String? confirmCode;
+  final String? confirmCodeErrors;
 
-  const SignUpState({required this.signUpForm, this.submitted = false});
+  const SignUpState({
+    required this.signUpForm,
+    this.confirmCode,
+    this.confirmCodeErrors,
+  });
 
   SignUpState.unknown()
     : signUpForm = FormGroup({
@@ -25,12 +30,14 @@ class SignUpState {
           ],
         ),
       }),
-      submitted = false;
+      confirmCode = null,
+      confirmCodeErrors = null;
 
   factory SignUpState.fromJson(Map<String, dynamic> json) {
     return SignUpState(
       signUpForm: json["signUpForm"],
-      submitted: json["submitted"],
+      confirmCode: json["confirmCode"],
+      confirmCodeErrors: json["confirmCodeErrors"],
     );
   }
 
@@ -39,11 +46,12 @@ class SignUpState {
 
   Map<String, dynamic> toJson() => {
     "signUpForm": signUpForm,
-    "submitted": submitted,
+    "confirmCode": confirmCode,
+    "confirmCodeErrors": confirmCodeErrors,
   };
 
   @override
   String toString() {
-    return '{ controls: ${signUpForm.controls}, value: ${signUpForm.value}, errors: ${signUpForm.errors}, submitted: $submitted }';
+    return '{ controls: ${signUpForm.controls}, value: ${signUpForm.value}, errors: ${signUpForm.errors}, confirmCode: $confirmCode, confirmCodeErrors: $confirmCodeErrors }';
   }
 }

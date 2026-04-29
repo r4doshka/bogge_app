@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
+import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/ui/widgets/loading_logo.dart';
@@ -14,15 +15,19 @@ class SplashScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isAuth = ref.read(authProvider).isAuth;
     final navigationService = ref.read(navigationServiceProvider);
     final palette = ref.watch(paletteProvider);
+
     useEffect(() {
       FlutterNativeSplash.remove();
       Future(() async {
         try {
+          // final storage = ref.read(storageServiceProvider);
+          // await storage.clearStorage();
+          await ref.read(authProvider.notifier).loadLoginState();
           if (!context.mounted) return;
 
+          final isAuth = ref.read(authProvider).isAuth;
           if (isAuth) {
             navigationService.goToAuthorizedMode(context);
           } else {

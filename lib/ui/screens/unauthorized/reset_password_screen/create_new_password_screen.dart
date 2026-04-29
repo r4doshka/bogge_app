@@ -1,33 +1,30 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/features/auth/api/auth_api.dart';
-import 'package:bogge_app/features/auth/api/backend_error_code_parser.dart';
-import 'package:bogge_app/features/auth/providers/sign_in_provider.dart';
+import 'package:bogge_app/features/auth/providers/reset_password_provider.dart';
 import 'package:bogge_app/helpers/handle_request_failure.dart';
 import 'package:bogge_app/models/request_error_model.dart';
-import 'package:bogge_app/providers/navigation/routers/un_authorized/un_authorized_router.gr.dart';
+import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/services/navigation_service.dart';
-import 'package:bogge_app/ui/screens/unauthorized/sign_in_screen/widgets/sign_in_form.dart';
+import 'package:bogge_app/ui/screens/unauthorized/reset_password_screen/widgets/create_new_password_form.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
+import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_button.dart';
-import 'package:bogge_app/ui/widgets/buttons/primary_text_button.dart';
-import 'package:bogge_app/ui/widgets/buttons/text_button_with_icon.dart';
 import 'package:bogge_app/ui/widgets/containers/dismiss_keyboard_container.dart';
 import 'package:bogge_app/ui/widgets/headers/common_header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage()
-class SignInScreen extends ConsumerWidget {
-  const SignInScreen({super.key});
+class CreateNewPasswordScreen extends ConsumerWidget {
+  const CreateNewPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(signInStateProvider);
-    final navigationService = ref.read(navigationServiceProvider);
+    final palette = ref.watch(paletteProvider);
+    final state = ref.watch(resetPasswordStateProvider);
+    final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -35,30 +32,38 @@ class SignInScreen extends ConsumerWidget {
           child: Padding(
             padding: AppSpace.ph16,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CommonHeader(
-                  title: 'Вход'.tr(),
-                  onPop: () => navigationService.goToUnAuthorizedMode(context),
+                  onPop: () {
+                    stateNotifier.clearNewPasswordFlow();
+                    stateNotifier.clearConfirmCodeFlow();
+                    context.pop();
+                  },
+                ),
+                AppSpace.h16,
+                Text(
+                  'Создайте новый пароль'.tr(),
+                  style: text_s25_w700_ls04.copyWith(color: palette.text),
+                ),
+                AppSpace.h16,
+                Text(
+                  'Придумайте надёжный пароль, который вы не использовали ранее'
+                      .tr(),
+                  style: text_s14_w400_ls01.copyWith(color: palette.text60),
+                  textAlign: TextAlign.center,
                 ),
                 AppSpace.h24,
                 ReactiveForm(
-                  formGroup: state.signInForm,
+                  formGroup: state.createNewPasswordForm,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SignInForm(),
-                      AppSpace.h16,
-                      PrimaryTextButton(
-                        text: 'Забыли пароль?'.tr(),
-                        onPress: () =>
-                            context.router.push(ResetPasswordRoute()),
-                      ),
-                      AppSpace.h32,
+                      CreateNewPasswordForm(),
+                      AppSpace.h24,
                       ReactiveFormConsumer(
                         builder: (context, form, _) {
                           return PrimaryButton(
-                            text: 'Войти'.tr(),
+                            text: 'Сохранить и войти'.tr(),
                             onPress: form.valid
                                 ? () => handleSubmit(
                                     context: context,
@@ -68,22 +73,6 @@ class SignInScreen extends ConsumerWidget {
                                 : null,
                           );
                         },
-                      ),
-                      AppSpace.h16,
-                      Center(
-                        child: TextButtonWithIcon(
-                          text: 'Войти как гость'.tr(),
-                          renderIconLeft: () => Padding(
-                            padding: EdgeInsetsDirectional.only(
-                              end: AppSpace.s4.w,
-                            ),
-                            child: SvgPicture.asset(
-                              'assets/icons/guest-icon.svg',
-                            ),
-                          ),
-                          onPress: () =>
-                              navigationService.goToGuestMode(context),
-                        ),
                       ),
                     ],
                   ),
@@ -102,26 +91,28 @@ class SignInScreen extends ConsumerWidget {
     required FormGroup form,
   }) async {
     try {
-      final response = await ref.read(authRepository).signIn();
+      FocusScope.of(context).unfocus();
+      final response = await ref.read(authRepository).resetPassword();
 
       if (!context.mounted) return;
 
       if (!response.success) {
-        handleFormError(
-          code: BackendErrorCodeX.fromCode(response.code),
-          form: form,
-          context: context,
-        );
+        final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
+        stateNotifier.clearNewPasswordFlow();
+        stateNotifier.clearConfirmCodeFlow();
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
+        context.pop();
         return;
       }
-
       final navigationService = ref.read(navigationServiceProvider);
       navigationService.goToAuthorizedMode(context);
     } on RequestErrorModel catch (e) {
       if (!context.mounted) return;
 
       handleRequestFailure(context: context, failureType: e.failureType);
-    } catch (_) {
+    } catch (error, _) {
       if (!context.mounted) return;
 
       ScaffoldMessenger.of(
