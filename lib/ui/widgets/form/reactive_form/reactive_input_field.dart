@@ -101,8 +101,6 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                 obscureText: obscureText,
                 obscuringCharacter: '*',
                 showErrors: (control) => false,
-                // showErrors: (control) =>
-                //     control.invalid && (control.touched || control.dirty),
                 decoration: InputDecoration(
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,

@@ -32,5 +32,15 @@ class UnAuthorizedRouter extends RootStackRouter {
       transitionsBuilder: TransitionsBuilders.noTransition,
       page: ResetPasswordRoute.page,
     ),
+    CustomRoute(
+      path: AppRoutesList.resetPasswordConfirmation.link,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      page: ResetPasswordConformEmailRoute.page,
+    ),
+    CustomRoute(
+      path: AppRoutesList.createNewPassword.link,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      page: CreateNewPasswordRoute.page,
+    ),
   ];
 }

@@ -4,9 +4,17 @@ enum AppRoutesList {
   signUp,
   welcome,
   signUpConfirmation,
-  resetPasswordNew,
+  createNewPassword,
+  resetPasswordConfirmation,
   resetPassword,
-  authorizedLoad;
+  authorizedLoad,
+  onboarding,
+  onboardingGender,
+  onboardingAge,
+  onboardingHeight,
+  onboardingWeight,
+  onboardingName,
+  onboardingAppleHealth;
 
   const AppRoutesList();
 
@@ -16,7 +24,8 @@ enum AppRoutesList {
 enum AppModalList {
   internetWarning,
   userAgreement,
-  privacyPolicy;
+  privacyPolicy,
+  emptyProfile;
 
   String get title => "${name}Modal";
 }

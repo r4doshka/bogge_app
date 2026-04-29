@@ -11,5 +11,30 @@ class AuthorizedRouter extends RootStackRouter {
       path: AppRoutesList.authorizedLoad.link,
       initial: true,
     ),
+    AutoRoute(page: OnboardingRoute.page, path: AppRoutesList.onboarding.link),
+    AutoRoute(
+      page: OnboardingGenderRoute.page,
+      path: AppRoutesList.onboardingGender.link,
+    ),
+    AutoRoute(
+      page: OnboardingAgeRoute.page,
+      path: AppRoutesList.onboardingAge.link,
+    ),
+    AutoRoute(
+      page: OnboardingHeightRoute.page,
+      path: AppRoutesList.onboardingHeight.link,
+    ),
+    AutoRoute(
+      page: OnboardingWeightRoute.page,
+      path: AppRoutesList.onboardingWeight.link,
+    ),
+    AutoRoute(
+      page: OnboardingNameRoute.page,
+      path: AppRoutesList.onboardingName.link,
+    ),
+    AutoRoute(
+      page: OnboardingAppleHealthRoute.page,
+      path: AppRoutesList.onboardingAppleHealth.link,
+    ),
   ];
 }
