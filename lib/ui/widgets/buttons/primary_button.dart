@@ -3,6 +3,7 @@ import 'package:bogge_app/ui/ui_tokens/app_border_radius.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/box_shadows.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
+import 'package:bogge_app/ui/widgets/spinner.dart';
 import 'package:bogge_app/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,11 +84,11 @@ class PrimaryButton extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: isLoading
                 ? [
-                    // Spinner(
-                    //   width: spinnerWidth ?? AppSpace.s24,
-                    //   height: spinnerHeight ?? AppSpace.s24,
-                    //   strokeWidth: spinnerStrokeWith ?? 3,
-                    // ),
+                    Spinner(
+                      width: spinnerWidth ?? AppSpace.s24,
+                      height: spinnerHeight ?? AppSpace.s24,
+                      strokeWidth: spinnerStrokeWith ?? 3,
+                    ),
                   ]
                 : [
                     if (renderLeftIcon != null) renderLeftIcon!(),

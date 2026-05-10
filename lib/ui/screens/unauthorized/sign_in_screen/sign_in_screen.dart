@@ -102,6 +102,7 @@ class SignInScreen extends ConsumerWidget {
     required FormGroup form,
   }) async {
     try {
+      FocusScope.of(context).unfocus();
       final response = await ref.read(authRepository).signIn();
 
       if (!context.mounted) return;
