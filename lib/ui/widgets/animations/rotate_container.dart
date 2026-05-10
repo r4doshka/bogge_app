@@ -5,12 +5,16 @@ class RotateContainer extends HookWidget {
   final Widget child;
   final bool value;
   final int duration;
+  final double begin;
+  final double end;
 
   const RotateContainer({
     super.key,
     required this.child,
     required this.value,
     this.duration = 300,
+    this.begin = 0.0,
+    this.end = 0.5,
   });
 
   @override
@@ -30,7 +34,7 @@ class RotateContainer extends HookWidget {
     }, [value]);
 
     return RotationTransition(
-      turns: Tween(begin: 0.0, end: 0.5).animate(controller),
+      turns: Tween(begin: begin, end: end).animate(controller),
       child: child,
     );
   }

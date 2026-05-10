@@ -21,7 +21,8 @@ class OnboardingGenderScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
-    final sexType = useState<SexType?>(null);
+    final user = ref.watch(userProvider);
+    final sexType = useState<SexType?>(user?.sex);
 
     return Scaffold(
       body: SafeArea(
@@ -57,10 +58,37 @@ class OnboardingGenderScreen extends HookConsumerWidget {
                 text: 'Далее'.tr(),
                 onPress: sexType.value == null
                     ? null
-                    : () {
-                        final data = UpdateUser(sex: sexType.value);
-                        ref.read(userProvider.notifier).updateUser(data);
-                        context.router.replace(const OnboardingAgeRoute());
+                    : () async {
+                        try {
+                          if (sexType.value != user?.sex) {
+                            final data = UpdateUser(sex: sexType.value);
+                            final newUser = await ref
+                                .read(userProvider.notifier)
+                                .updateUser(data);
+
+                            if (newUser?.sex == null && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Что-то пошло не так'.tr()),
+                                ),
+                              );
+                              return;
+                            }
+                          }
+                          if (context.mounted) {
+                            context.router.push(const OnboardingAgeRoute());
+                            return;
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Что-то пошло не так'.tr()),
+                              ),
+                            );
+                            return;
+                          }
+                        }
                       },
               ),
             ],

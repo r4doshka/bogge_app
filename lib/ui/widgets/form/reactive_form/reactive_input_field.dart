@@ -27,6 +27,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
   final void Function(FormControl<T>)? onChanged;
   final bool obscureText;
   final List<String>? hiddenErrors;
+  final bool readOnly;
 
   const ReactiveInputField({
     required this.fieldName,
@@ -46,6 +47,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
     this.labelStyle,
     this.obscureText = false,
     this.hiddenErrors,
+    this.readOnly = false,
     super.key,
   });
 
@@ -81,67 +83,72 @@ class ReactiveInputField<T> extends HookConsumerWidget {
             final hasErrors =
                 control.invalid && (control.touched || control.dirty);
 
-            return AnimatedContainer(
-              height: containerHeight ?? 54.h,
-              duration: const Duration(milliseconds: 150),
-              padding: EdgeInsetsDirectional.only(
-                start: AppSpace.s16.w,
-                end: AppSpace.s16.w,
-                top: isActive ? AppSpace.s4.h : AppSpace.s8.h,
-                bottom: isActive ? AppSpace.s20.h : AppSpace.s8.h,
-              ),
-              decoration: BoxDecoration(
-                color: inputColor ?? palette.white,
-                borderRadius: AppBorderRadius.all16,
-              ),
-              child: ReactiveTextField<T>(
-                formControlName: fieldName,
-                focusNode: focusNode,
-                onChanged: onChanged,
-                obscureText: obscureText,
-                obscuringCharacter: '*',
-                showErrors: (control) => false,
-                decoration: InputDecoration(
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  focusedErrorBorder: InputBorder.none,
-                  hint: hint,
-                  hintText: hintText,
-                  hintStyle:
-                      hintStyle ??
-                      text_s17_w400_lsm043.copyWith(color: palette.text30),
-                  contentPadding: contentPadding ?? EdgeInsetsDirectional.zero,
-                  filled: false,
-                  fillColor: Colors.transparent,
-                  errorText: null,
-                  errorStyle: const TextStyle(
-                    height: 0,
-                    fontSize: 0,
-                    color: Colors.transparent,
-                  ),
-                  floatingLabelStyle: text_s11_w400_ls01.copyWith(
-                    color: palette.text30,
-                  ),
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  labelText: labelText,
-                  labelStyle:
-                      labelStyle ??
-                      text_s17_w500_lsm043.copyWith(color: palette.text30),
+            return IgnorePointer(
+              ignoring: readOnly,
+              child: AnimatedContainer(
+                height: containerHeight ?? 54.h,
+                duration: const Duration(milliseconds: 150),
+                padding: EdgeInsetsDirectional.only(
+                  start: AppSpace.s16.w,
+                  end: AppSpace.s16.w,
+                  top: isActive ? AppSpace.s4.h : AppSpace.s8.h,
+                  bottom: isActive ? AppSpace.s20.h : AppSpace.s8.h,
                 ),
-                style:
-                    textStyle ??
-                    text_s17_w500_lsm043.copyWith(
-                      color: hasErrors ? palette.peach : palette.text,
-                      letterSpacing: obscureText
-                          ? 0
-                          : text_s17_w500_lsm043.letterSpacing,
+                decoration: BoxDecoration(
+                  color: inputColor ?? palette.white,
+                  borderRadius: AppBorderRadius.all16,
+                ),
+                child: ReactiveTextField<T>(
+                  readOnly: readOnly,
+                  formControlName: fieldName,
+                  focusNode: focusNode,
+                  onChanged: onChanged,
+                  obscureText: obscureText,
+                  obscuringCharacter: '*',
+                  showErrors: (control) => false,
+                  decoration: InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    focusedErrorBorder: InputBorder.none,
+                    hint: hint,
+                    hintText: hintText,
+                    hintStyle:
+                        hintStyle ??
+                        text_s17_w400_lsm043.copyWith(color: palette.text30),
+                    contentPadding:
+                        contentPadding ?? EdgeInsetsDirectional.zero,
+                    filled: false,
+                    fillColor: Colors.transparent,
+                    errorText: null,
+                    errorStyle: const TextStyle(
+                      height: 0,
+                      fontSize: 0,
+                      color: Colors.transparent,
                     ),
-                cursorColor: palette.primary,
-                keyboardType: keyboardType ?? TextInputType.text,
-                valueAccessor: valueAccessor,
-                inputFormatters: inputFormatters,
-                validationMessages: validationMessages,
+                    floatingLabelStyle: text_s11_w400_ls01.copyWith(
+                      color: palette.text30,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    labelText: labelText,
+                    labelStyle:
+                        labelStyle ??
+                        text_s17_w500_lsm043.copyWith(color: palette.text30),
+                  ),
+                  style:
+                      textStyle ??
+                      text_s17_w500_lsm043.copyWith(
+                        color: hasErrors ? palette.peach : palette.text,
+                        letterSpacing: obscureText
+                            ? 0
+                            : text_s17_w500_lsm043.letterSpacing,
+                      ),
+                  cursorColor: palette.primary,
+                  keyboardType: keyboardType ?? TextInputType.text,
+                  valueAccessor: valueAccessor,
+                  inputFormatters: inputFormatters,
+                  validationMessages: validationMessages,
+                ),
               ),
             );
           },

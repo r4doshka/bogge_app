@@ -95,36 +95,54 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
     final user = ref.read(userProvider);
 
     if (user?.sex == null) {
-      await _navigate(const OnboardingGenderRoute());
+      await _navigate([const OnboardingGenderRoute()]);
       return;
     }
     if (user?.dateOfBirth == null) {
-      await _navigate(const OnboardingAgeRoute());
+      await _navigate([
+        const OnboardingGenderRoute(),
+        const OnboardingAgeRoute(),
+      ]);
       return;
     }
     if (user?.height == null) {
-      await _navigate(const OnboardingHeightRoute());
+      await _navigate([
+        const OnboardingGenderRoute(),
+        const OnboardingAgeRoute(),
+        const OnboardingHeightRoute(),
+      ]);
       return;
     }
     if (user?.weight == null) {
-      await _navigate(const OnboardingWeightRoute());
+      await _navigate([
+        const OnboardingGenderRoute(),
+        const OnboardingAgeRoute(),
+        const OnboardingHeightRoute(),
+        const OnboardingWeightRoute(),
+      ]);
       return;
     }
     if (user?.name == null) {
-      await _navigate(const OnboardingNameRoute());
+      await _navigate([
+        const OnboardingGenderRoute(),
+        const OnboardingAgeRoute(),
+        const OnboardingHeightRoute(),
+        const OnboardingWeightRoute(),
+        const OnboardingNameRoute(),
+      ]);
       return;
     }
 
-    await _navigate(const HomeRoute());
+    await _navigate([const HomeRoute()]);
   }
 
-  Future<void> _navigate(PageRouteInfo route) async {
+  Future<void> _navigate(List<PageRouteInfo> routeList) async {
     final stopwatch = Stopwatch()..start();
     ref.read(authProvider.notifier).setCurrentFlow(FlowType.authorized);
     await Future.delayed(Duration(milliseconds: 10));
     if (mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.router.replace(route);
+        context.router.replaceAll(routeList);
       });
     }
     stopwatch.stop();
