@@ -9,6 +9,7 @@ import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/services/network_connectivity_notifier.dart';
 import 'package:bogge_app/ui/widgets/loading_logo.dart';
 import 'package:bogge_app/utils/enums.dart';
+import 'package:bogge_app/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -59,6 +60,7 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
 
   Future<bool> initialization() async {
     try {
+      await Future.delayed(const Duration(seconds: 1));
       final tokenStatus = await ref.read(authRepository).checkToken();
 
       switch (tokenStatus) {
@@ -92,26 +94,26 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
     await ref.read(appDataInitializerProvider).initialize();
     final user = ref.read(userProvider);
 
-    // if (user?.sex == null) {
-    //   await _navigate(const OnboardingGenderRoute());
-    //   return;
-    // }
-    // if (user?.dateOfBirth == null) {
-    //   await _navigate(const OnboardingAgeRoute());
-    //   return;
-    // }
-    // if (user?.height == null) {
-    //   await _navigate(const OnboardingHeightRoute());
-    //   return;
-    // }
-    // if (user?.weight == null) {
-    //   await _navigate(const OnboardingWeightRoute());
-    //   return;
-    // }
-    // if (user?.name == null) {
-    //   await _navigate(const OnboardingNameRoute());
-    //   return;
-    // }
+    if (user?.sex == null) {
+      await _navigate(const OnboardingGenderRoute());
+      return;
+    }
+    if (user?.dateOfBirth == null) {
+      await _navigate(const OnboardingAgeRoute());
+      return;
+    }
+    if (user?.height == null) {
+      await _navigate(const OnboardingHeightRoute());
+      return;
+    }
+    if (user?.weight == null) {
+      await _navigate(const OnboardingWeightRoute());
+      return;
+    }
+    if (user?.name == null) {
+      await _navigate(const OnboardingNameRoute());
+      return;
+    }
 
     await _navigate(const HomeRoute());
   }
@@ -130,11 +132,19 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
   }
 
   Future<void> _handleInvalidToken() async {
-    // await Storage.clearStorage();
-    // if (mounted) {
-    //   ref.read(navigationServiceProvider).goToSignIn(context);
-    // }
-    debugPrint('_handleInvalidToken ');
+    final isTokenRefreshed = await ref.read(authRepository).refreshToken();
+
+    if (isTokenRefreshed) {
+      _handleValidToken();
+      return;
+    }
+
+    await Storage.deleteAll();
+    ref.read(authProvider.notifier).loadLoginState();
+    if (mounted) {
+      ref.read(navigationServiceProvider).goToSignIn(context);
+    }
+    debugPrint('_handleInvalidToken go to sign in screen ');
   }
 
   @override

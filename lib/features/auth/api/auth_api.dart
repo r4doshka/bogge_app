@@ -30,7 +30,8 @@ abstract class AuthRepository {
   Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
   resetPassword();
   Future<void> logout();
-  Future<void> checkToken();
+  Future<TokenStatus> checkToken();
+  Future<bool> refreshToken();
 }
 
 class AuthRepositoryAPI implements AuthRepository {
@@ -279,6 +280,7 @@ class AuthRepositoryAPI implements AuthRepository {
   @override
   Future<TokenStatus> checkToken() async {
     await ref.read(httpProvider.notifier).setHeaders();
+
     final response = await ref
         .read(httpProvider.notifier)
         .post(
@@ -295,5 +297,45 @@ class AuthRepositoryAPI implements AuthRepository {
     return response.data["valid"] == true
         ? TokenStatus.active
         : TokenStatus.inactive;
+  }
+
+  @override
+  Future<bool> refreshToken() async {
+    final storage = ref.read(storageServiceProvider);
+
+    final refreshToken = await storage.readRefreshToken();
+
+    final response = await ref
+        .read(httpProvider.notifier)
+        .post(
+          query: '$path/refresh',
+          type: AuthType.bearer,
+          data: {"refreshToken": refreshToken},
+          errorMapper: BackendErrorCodeX.fromCode,
+          successMapper: AuthSuccessCodeX.fromCode,
+        );
+
+    if (!response.success || response.data == null) {
+      return false;
+    }
+
+    bool tokensSaved = false;
+
+    try {
+      final json = response.data as Map<String, dynamic>;
+
+      final token = TokenResponse.fromJson(json);
+
+      final storage = ref.read(storageServiceProvider);
+
+      await storage.writeAccessToken(token.accessToken);
+      await storage.writeRefreshToken(token.refreshToken);
+      await ref.read(authProvider.notifier).loadLoginState();
+      tokensSaved = true;
+    } catch (e, trace) {
+      debugPrint('Token parse error: $e, $trace');
+    }
+
+    return tokensSaved;
   }
 }

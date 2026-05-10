@@ -46,8 +46,7 @@ class DioStateNotifier extends StateNotifier<Dio> {
   Map<String, dynamic> getHeaders() => state.options.headers;
 
   Future<void> setHeaders() async {
-    final storage = ref.read(storageServiceProvider);
-    final token = await storage.readAccessToken();
+    final token = ref.read(authProvider).accessToken;
     accessToken = token;
 
     if ((accessToken ?? '').isNotEmpty) {
@@ -326,6 +325,8 @@ class DioStateNotifier extends StateNotifier<Dio> {
 
           if (error.response?.statusCode == 401 ||
               error.response?.statusCode == 403) {
+            final isCheck = options.path.contains('/api/auth/check');
+            if (isCheck) return handler.reject(error);
             await Storage.deleteAll();
             ref.read(authProvider.notifier).loadLoginState();
             final navigationProvider = ref.read(navigationServiceProvider);

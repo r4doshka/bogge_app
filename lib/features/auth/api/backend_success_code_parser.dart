@@ -9,6 +9,7 @@ enum AuthSuccessCode {
   loginSuccess,
   resetPasswordSuccess,
   forgotPasswordSent,
+  refreshTokenSuccess,
   unknown,
 }
 
@@ -25,6 +26,8 @@ extension AuthSuccessCodeX on AuthSuccessCode {
         return AuthSuccessCode.resetPasswordSuccess;
       case 'FORGOT_PASSWORD_SENT':
         return AuthSuccessCode.forgotPasswordSent;
+      case 'REFRESH_TOKEN_SUCCESS':
+        return AuthSuccessCode.refreshTokenSuccess;
       default:
         return AuthSuccessCode.unknown;
     }
@@ -47,6 +50,9 @@ void handleFormSuccess({
       break;
 
     case AuthSuccessCode.loginSuccess:
+      break;
+
+    case AuthSuccessCode.refreshTokenSuccess:
       break;
 
     case AuthSuccessCode.resetPasswordSuccess:
