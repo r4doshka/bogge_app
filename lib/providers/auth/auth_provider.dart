@@ -1,7 +1,7 @@
 import 'package:bogge_app/models/router/router_model.dart';
 import 'package:bogge_app/providers/auth/route_stack_notifier.dart';
+import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/utils/enums.dart';
-import 'package:bogge_app/utils/storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/legacy.dart';
 
@@ -47,8 +47,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   // ===== init =====
   Future<void> init() async {
-    final accessToken = await Storage.readAccessToken();
-    final refreshToken = await Storage.readRefreshToken();
+    final storage = ref.read(storageServiceProvider);
+    final accessToken = await storage.readAccessToken();
+    final refreshToken = await storage.readRefreshToken();
 
     state = state.copyWith(
       accessToken: accessToken,
@@ -70,8 +71,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   // ===== loadLoginState =====
   Future<void> loadLoginState() async {
-    final accessToken = await Storage.readAccessToken();
-    final refreshToken = await Storage.readRefreshToken();
+    final storage = ref.read(storageServiceProvider);
+    final accessToken = await storage.readAccessToken();
+    final refreshToken = await storage.readRefreshToken();
     final isAuth = accessToken != null;
 
     state = state.copyWith(

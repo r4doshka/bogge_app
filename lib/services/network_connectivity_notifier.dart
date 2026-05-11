@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:bogge_app/services/navigation_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -52,16 +50,6 @@ class NetworkConnectivityNotifier extends ChangeNotifier {
   Future<void> recheckConnection() async {
     final results = await _connectivity.checkConnectivity();
     await _updateState(results);
-  }
-
-  void setConnection(bool state) {
-    final navigationService = ref.read(navigationServiceProvider);
-
-    if (navigationService.layoutContext != null &&
-        navigationService.layoutContext!.mounted) {
-      _hasConnection = state;
-      notifyListeners();
-    }
   }
 
   @override

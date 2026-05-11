@@ -15,24 +15,21 @@ import 'package:bogge_app/ui/widgets/headers/common_header.dart';
 import 'package:bogge_app/ui/widgets/resend_timer_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class SignUpConfirmationScreen extends ConsumerStatefulWidget {
+class SignUpConfirmationScreen extends HookConsumerWidget {
   final String email;
   const SignUpConfirmationScreen({required this.email, super.key});
 
   @override
-  ConsumerState<SignUpConfirmationScreen> createState() =>
-      SignUpConfirmationState();
-}
-
-class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.watch(paletteProvider);
     final stateNotifier = ref.read(signUpStateProvider.notifier);
     final state = ref.watch(signUpStateProvider);
+
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -62,7 +59,7 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
                       style: text_s14_w400_ls01.copyWith(color: palette.text60),
                       children: <TextSpan>[
                         TextSpan(
-                          text: ' ${widget.email}',
+                          text: ' $email',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                           ),
@@ -81,11 +78,17 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
                   errorText: state.confirmCodeErrors,
                   controller: stateNotifier.pinController,
                   onChanged: stateNotifier.updateConfirmCode,
-                  onComplete: (_) => handleSubmit(),
+                  onComplete: (_) => isSubmitting.value
+                      ? null
+                      : handleSubmit(
+                          context: context,
+                          ref: ref,
+                          isSubmitting: isSubmitting,
+                        ),
                 ),
                 AppSpace.h24,
                 ResendTimer(
-                  handleResendCode,
+                  () => handleResendCode(context: context, ref: ref),
                   state.signUpForm.control(SignUpState.emailFieldName).value,
                 ),
               ],
@@ -96,11 +99,14 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
     );
   }
 
-  void handleResendCode() async {
+  void handleResendCode({
+    required WidgetRef ref,
+    required BuildContext context,
+  }) async {
     try {
       final response = await ref.read(authRepository).getConfirmCode();
 
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       if (!response.success) {
         handleFormError(
@@ -109,14 +115,11 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
         );
         return;
       }
-
-      final navigationService = ref.read(navigationServiceProvider);
-      navigationService.goToAuthorizedMode(context);
     } on RequestErrorModel catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       handleRequestFailure(context: context, failureType: e.failureType);
     } catch (_) {
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       ScaffoldMessenger.of(
         context,
@@ -124,8 +127,14 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
     }
   }
 
-  void handleSubmit() async {
+  void handleSubmit({
+    required WidgetRef ref,
+    required BuildContext context,
+    required ValueNotifier<bool> isSubmitting,
+  }) async {
     try {
+      FocusScope.of(context).unfocus();
+      isSubmitting.value = true;
       final stateNotifier = ref.read(signUpStateProvider.notifier);
 
       final isValid = stateNotifier.validateConfirmCode();
@@ -137,19 +146,23 @@ class SignUpConfirmationState extends ConsumerState<SignUpConfirmationScreen> {
         stateNotifier.setConfirmCodeError();
         return;
       }
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       final navigationService = ref.read(navigationServiceProvider);
       navigationService.goToAuthorizedMode(context);
     } on RequestErrorModel catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       handleRequestFailure(context: context, failureType: e.failureType);
     } catch (_) {
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
+    } finally {
+      if (context.mounted) {
+        isSubmitting.value = false;
+      }
     }
   }
 }

@@ -6,8 +6,10 @@ import 'package:bogge_app/features/auth/models/token_response.dart';
 import 'package:bogge_app/features/auth/providers/reset_password_provider.dart';
 import 'package:bogge_app/features/auth/providers/sign_in_provider.dart';
 import 'package:bogge_app/features/auth/providers/sign_up_provider.dart';
+import 'package:bogge_app/features/user/providers/user_provider.dart';
 import 'package:bogge_app/models/api_response.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
+import 'package:bogge_app/providers/shared_preferences_provider.dart';
 import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/services/http/core/http_client_base.dart';
 import 'package:bogge_app/utils/enums.dart';
@@ -158,6 +160,8 @@ class AuthRepositoryAPI implements AuthRepository {
       await storage.writeRefreshToken(token.refreshToken);
       await ref.read(authProvider.notifier).loadLoginState();
       tokensSaved = true;
+      final preferences = ref.read(sharedPreferencesServiceProvider);
+      preferences.removeSendEmailTimeByEmail(email);
     } catch (e, trace) {
       debugPrint('Token parse error: $e, $trace');
     }
@@ -196,7 +200,25 @@ class AuthRepositoryAPI implements AuthRepository {
   }
 
   @override
-  Future<void> logout() async {}
+  Future<void> logout() async {
+    try {
+      await ref
+          .read(httpProvider.notifier)
+          .post(
+            query: '$path/logout',
+            type: AuthType.bearer,
+            errorMapper: BackendErrorCodeX.fromCode,
+            successMapper: AuthSuccessCodeX.fromCode,
+          );
+    } catch (e) {
+      debugPrint('logout error $e');
+    } finally {
+      final storage = ref.read(storageServiceProvider);
+      await storage.deleteAll();
+      await ref.read(authProvider.notifier).loadLoginState();
+      ref.read(userProvider.notifier).clear();
+    }
+  }
 
   @override
   Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
@@ -261,7 +283,10 @@ class AuthRepositoryAPI implements AuthRepository {
       await storage.writeAccessToken(token.accessToken);
       await storage.writeRefreshToken(token.refreshToken);
       await ref.read(authProvider.notifier).loadLoginState();
+      await ref.read(httpProvider.notifier).setHeaders();
       tokensSaved = true;
+      final preferences = ref.read(sharedPreferencesServiceProvider);
+      preferences.removeSendEmailTimeByEmail(email);
     } catch (e, trace) {
       debugPrint('Token parse error: $e, $trace');
     }

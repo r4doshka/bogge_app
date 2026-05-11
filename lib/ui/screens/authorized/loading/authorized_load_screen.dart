@@ -4,12 +4,12 @@ import 'package:bogge_app/features/auth/api/auth_api.dart';
 import 'package:bogge_app/features/user/providers/user_provider.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
 import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
+import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/services/initializer/app_data_initializer.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/services/network_connectivity_notifier.dart';
 import 'package:bogge_app/ui/widgets/loading_logo.dart';
 import 'package:bogge_app/utils/enums.dart';
-import 'package:bogge_app/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -33,13 +33,17 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
     _connectivityNotifier = ref.read(networkConnectivityProvider);
     _connectivityListener = () {
       if (_connectivityNotifier.hasConnection && _needsRetryInitialization) {
-        _needsRetryInitialization = false;
-        initialization();
+        _tryInitialization();
       }
     };
     _connectivityNotifier.addListener(_connectivityListener);
-
     _tryInitialization();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // FlutterNativeSplash.remove();
+      if (!mounted) return;
+      ref.read(navigationServiceProvider).layoutContext = context;
+    });
   }
 
   @override
@@ -65,10 +69,12 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
 
       switch (tokenStatus) {
         case TokenStatus.active:
+          _needsRetryInitialization = false;
           await _handleValidToken();
           return true;
 
         case TokenStatus.inactive:
+          _needsRetryInitialization = false;
           await _handleInvalidToken();
           return false;
 
@@ -91,7 +97,15 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
   }
 
   Future<void> _handleValidToken() async {
-    await ref.read(appDataInitializerProvider).initialize();
+    final isInitialized = await ref
+        .read(appDataInitializerProvider)
+        .initialize();
+
+    if (isInitialized != true) {
+      await ref.read(authRepository).logout();
+      await _clearStateAndNavigate();
+      return;
+    }
 
     final user = ref.read(userProvider);
 
@@ -101,7 +115,7 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
       (completed: user?.height != null, route: const OnboardingHeightRoute()),
       (completed: user?.weight != null, route: const OnboardingWeightRoute()),
       (completed: user?.name != null, route: const OnboardingNameRoute()),
-      (completed: false, route: const OnboardingAppleHealthRoute()),
+      (completed: true, route: const OnboardingAppleHealthRoute()),
     ];
 
     final firstIncompleteIndex = steps.indexWhere((step) => !step.completed);
@@ -136,25 +150,25 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
     final isTokenRefreshed = await ref.read(authRepository).refreshToken();
 
     if (isTokenRefreshed) {
-      _handleValidToken();
+      await _handleValidToken();
       return;
     }
+    await _clearStateAndNavigate();
+    debugPrint('_handleInvalidToken go to sign in screen ');
+  }
 
-    await Storage.deleteAll();
+  Future<void> _clearStateAndNavigate() async {
+    final storage = ref.read(storageServiceProvider);
+    await storage.deleteAll();
+
     ref.read(authProvider.notifier).loadLoginState();
     if (mounted) {
       ref.read(navigationServiceProvider).goToSignIn(context);
     }
-    debugPrint('_handleInvalidToken go to sign in screen ');
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // FlutterNativeSplash.remove();
-      ref.read(navigationServiceProvider).layoutContext = context;
-    });
-
     return const PopScope(
       canPop: false,
       child: Scaffold(body: Center(child: LoadingLogo())),

@@ -9,36 +9,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class PrimaryButton extends ConsumerWidget {
+class CommonButton extends ConsumerWidget {
   final Function()? onPress;
   final bool isLoading;
   final String text;
   final Color? textColor;
   final TextStyle? textStyle;
-  final Widget Function()? renderRightIcon;
-  final Widget Function()? renderLeftIcon;
   final EdgeInsetsDirectional? padding;
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
-  final double? width;
-  final double? height;
   final double? spinnerWidth;
   final double? spinnerHeight;
   final double? spinnerStrokeWith;
 
-  const PrimaryButton({
+  const CommonButton({
     required this.text,
     this.onPress,
     this.isLoading = false,
-    this.renderRightIcon,
-    this.renderLeftIcon,
     this.textColor,
     this.textStyle,
     this.padding,
     this.borderRadius,
     this.backgroundColor,
-    this.width,
-    this.height,
     this.spinnerWidth,
     this.spinnerHeight,
     this.spinnerStrokeWith,
@@ -48,23 +40,19 @@ class PrimaryButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.watch(paletteProvider);
-    final style = textStyle ?? text_s17_w700_lsm043;
+    final style = textStyle ?? text_s17_w400_lsm043;
 
-    final bgColor = onPress != null
-        ? palette.primary
-        : palette.primary.withSafeOpacity(0.3);
+    final bgColor = onPress != null ? palette.white : palette.white30;
 
     return Material(
       clipBehavior: Clip.hardEdge,
       borderRadius: borderRadius ?? AppBorderRadius.all100,
       color: Colors.transparent,
       child: InkWell(
-        highlightColor: palette.white.withSafeOpacity(0.1),
-        splashColor: palette.white.withSafeOpacity(0.1),
+        highlightColor: palette.text12,
+        splashColor: palette.text12,
         onTap: onPress,
         child: Ink(
-          height: height,
-          width: width,
           padding:
               padding ??
               EdgeInsetsDirectional.symmetric(
@@ -74,7 +62,6 @@ class PrimaryButton extends ConsumerWidget {
           decoration: BoxDecoration(
             color: backgroundColor ?? bgColor,
             borderRadius: borderRadius ?? AppBorderRadius.all100,
-            border: Border.all(color: palette.white30, width: AppSpace.s2),
             boxShadow: onPress != null ? AppBoxShadows.buttonBoxShadow : null,
           ),
           child: Row(
@@ -89,16 +76,14 @@ class PrimaryButton extends ConsumerWidget {
                     ),
                   ]
                 : [
-                    if (renderLeftIcon != null) renderLeftIcon!(),
                     Text(
                       text,
                       style: style.copyWith(
                         color: onPress == null
-                            ? (textColor ?? palette.white).withSafeOpacity(0.5)
-                            : textColor ?? palette.white,
+                            ? (textColor ?? palette.peach).withSafeOpacity(0.5)
+                            : textColor ?? palette.peach,
                       ),
                     ),
-                    if (renderRightIcon != null) renderRightIcon!(),
                   ],
           ),
         ),

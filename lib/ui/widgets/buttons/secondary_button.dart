@@ -24,7 +24,6 @@ class SecondaryButton extends ConsumerWidget {
   final double? spinnerWidth;
   final double? spinnerHeight;
   final double? spinnerStrokeWith;
-  final WidgetStateProperty<Color?>? overlayColor;
 
   const SecondaryButton({
     required this.text,
@@ -42,7 +41,6 @@ class SecondaryButton extends ConsumerWidget {
     this.spinnerWidth,
     this.spinnerHeight,
     this.spinnerStrokeWith,
-    this.overlayColor,
     super.key,
   });
 

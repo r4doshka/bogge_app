@@ -11,7 +11,6 @@ part of 'env.dart';
 // generated_from: .env.development
 final class _DevEnv {
   static const String baseUrl = 'http://localhost:3000';
-  // static const String baseUrl = 'http://192.168.1.68:3000';
 }
 
 // coverage:ignore-file

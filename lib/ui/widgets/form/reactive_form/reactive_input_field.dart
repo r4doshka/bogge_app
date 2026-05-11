@@ -161,7 +161,6 @@ class ReactiveInputField<T> extends HookConsumerWidget {
               final entries = control.errors.entries.where(
                 (e) => !(hiddenErrors?.contains(e.key) ?? false),
               );
-              print('entries $entries');
               final List<String> errorTexts = entries
                   .map((entry) {
                     final key = entry.key;

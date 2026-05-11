@@ -14,17 +14,19 @@ import 'package:bogge_app/ui/widgets/containers/dismiss_keyboard_container.dart'
 import 'package:bogge_app/ui/widgets/headers/common_header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage()
-class ResetPasswordScreen extends ConsumerWidget {
+class ResetPasswordScreen extends HookConsumerWidget {
   const ResetPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.watch(paletteProvider);
     final state = ref.watch(resetPasswordStateProvider);
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -58,11 +60,13 @@ class ResetPasswordScreen extends ConsumerWidget {
                         builder: (context, form, _) {
                           return PrimaryButton(
                             text: 'Отправить письмо'.tr(),
-                            onPress: form.valid
+                            isLoading: isSubmitting.value,
+                            onPress: form.valid && !isSubmitting.value
                                 ? () => handleSubmit(
                                     context: context,
                                     ref: ref,
                                     form: form,
+                                    isSubmitting: isSubmitting,
                                   )
                                 : null,
                           );
@@ -83,10 +87,14 @@ class ResetPasswordScreen extends ConsumerWidget {
     required BuildContext context,
     required WidgetRef ref,
     required FormGroup form,
+    required ValueNotifier<bool> isSubmitting,
   }) async {
     try {
       FocusScope.of(context).unfocus();
+      isSubmitting.value = true;
       final state = ref.read(resetPasswordStateProvider);
+      state.resetPasswordForm.unfocus();
+
       final String email = state.resetPasswordForm
           .control(ResetPasswordState.emailFieldName)
           .value;
@@ -117,6 +125,10 @@ class ResetPasswordScreen extends ConsumerWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
+    } finally {
+      if (context.mounted) {
+        isSubmitting.value = false;
+      }
     }
   }
 }

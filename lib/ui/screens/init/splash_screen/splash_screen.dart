@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
-import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/ui/widgets/loading_logo.dart';
@@ -24,6 +23,7 @@ class SplashScreen extends HookConsumerWidget {
         try {
           // final storage = ref.read(storageServiceProvider);
           // await storage.clearStorage();
+
           await ref.read(authProvider.notifier).loadLoginState();
           if (!context.mounted) return;
 

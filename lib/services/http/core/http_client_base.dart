@@ -9,7 +9,6 @@ import 'package:bogge_app/providers/storage_provider.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/services/network_connectivity_notifier.dart';
 import 'package:bogge_app/utils/enums.dart';
-import 'package:bogge_app/utils/storage.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -327,7 +326,9 @@ class DioStateNotifier extends StateNotifier<Dio> {
               error.response?.statusCode == 403) {
             final isCheck = options.path.contains('/api/auth/check');
             if (isCheck) return handler.reject(error);
-            await Storage.deleteAll();
+            final storage = ref.read(storageServiceProvider);
+            await storage.deleteAll();
+
             ref.read(authProvider.notifier).loadLoginState();
             final navigationProvider = ref.read(navigationServiceProvider);
             final layoutContext = navigationProvider.layoutContext;

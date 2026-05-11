@@ -13,11 +13,12 @@ import 'package:bogge_app/ui/widgets/containers/dismiss_keyboard_container.dart'
 import 'package:bogge_app/ui/widgets/headers/common_header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage()
-class CreateNewPasswordScreen extends ConsumerWidget {
+class CreateNewPasswordScreen extends HookConsumerWidget {
   const CreateNewPasswordScreen({super.key});
 
   @override
@@ -25,6 +26,7 @@ class CreateNewPasswordScreen extends ConsumerWidget {
     final palette = ref.watch(paletteProvider);
     final state = ref.watch(resetPasswordStateProvider);
     final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -64,11 +66,13 @@ class CreateNewPasswordScreen extends ConsumerWidget {
                         builder: (context, form, _) {
                           return PrimaryButton(
                             text: 'Сохранить и войти'.tr(),
-                            onPress: form.valid
+                            isLoading: isSubmitting.value,
+                            onPress: form.valid && !isSubmitting.value
                                 ? () => handleSubmit(
                                     context: context,
                                     ref: ref,
                                     form: form,
+                                    isSubmitting: isSubmitting,
                                   )
                                 : null,
                           );
@@ -89,8 +93,10 @@ class CreateNewPasswordScreen extends ConsumerWidget {
     required BuildContext context,
     required WidgetRef ref,
     required FormGroup form,
+    required ValueNotifier<bool> isSubmitting,
   }) async {
     try {
+      isSubmitting.value = true;
       FocusScope.of(context).unfocus();
       final response = await ref.read(authRepository).resetPassword();
 
@@ -118,6 +124,10 @@ class CreateNewPasswordScreen extends ConsumerWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
+    } finally {
+      if (context.mounted) {
+        isSubmitting.value = false;
+      }
     }
   }
 }

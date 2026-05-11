@@ -14,25 +14,21 @@ import 'package:bogge_app/ui/widgets/headers/common_header.dart';
 import 'package:bogge_app/ui/widgets/resend_timer_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class ResetPasswordConformEmailScreen extends ConsumerStatefulWidget {
+class ResetPasswordConformEmailScreen extends HookConsumerWidget {
   final String email;
   const ResetPasswordConformEmailScreen({required this.email, super.key});
 
   @override
-  ConsumerState<ResetPasswordConformEmailScreen> createState() =>
-      ResetPasswordConformEmailState();
-}
-
-class ResetPasswordConformEmailState
-    extends ConsumerState<ResetPasswordConformEmailScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.watch(paletteProvider);
     final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
     final state = ref.watch(resetPasswordStateProvider);
+
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: DismissKeyboardContainer(
@@ -57,7 +53,7 @@ class ResetPasswordConformEmailState
                       style: text_s14_w400_ls01.copyWith(color: palette.text60),
                       children: <TextSpan>[
                         TextSpan(
-                          text: ' ${widget.email}',
+                          text: ' $email',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                           ),
@@ -76,11 +72,17 @@ class ResetPasswordConformEmailState
                   errorText: state.confirmCodeErrors,
                   controller: stateNotifier.pinController,
                   onChanged: stateNotifier.updateConfirmCode,
-                  onComplete: (_) => handleSubmit(),
+                  onComplete: (_) => isSubmitting.value
+                      ? null
+                      : handleSubmit(
+                          context: context,
+                          ref: ref,
+                          isSubmitting: isSubmitting,
+                        ),
                 ),
                 AppSpace.h24,
                 ResendTimer(
-                  handleResendCode,
+                  () => handleResendCode(context: context, ref: ref),
                   state.resetPasswordForm
                       .control(ResetPasswordState.emailFieldName)
                       .value,
@@ -93,13 +95,16 @@ class ResetPasswordConformEmailState
     );
   }
 
-  void handleResendCode() async {
+  void handleResendCode({
+    required WidgetRef ref,
+    required BuildContext context,
+  }) async {
     try {
       final response = await ref.read(authRepository).forgotPassword();
       final state = ref.watch(resetPasswordStateProvider.notifier);
       state.clearConfirmCodeFlow();
 
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       if (!response.success) {
         ScaffoldMessenger.of(
@@ -108,10 +113,10 @@ class ResetPasswordConformEmailState
         return;
       }
     } on RequestErrorModel catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       handleRequestFailure(context: context, failureType: e.failureType);
     } catch (_) {
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       ScaffoldMessenger.of(
         context,
@@ -119,8 +124,14 @@ class ResetPasswordConformEmailState
     }
   }
 
-  void handleSubmit() async {
+  void handleSubmit({
+    required WidgetRef ref,
+    required BuildContext context,
+    required ValueNotifier<bool> isSubmitting,
+  }) async {
     try {
+      FocusScope.of(context).unfocus();
+      isSubmitting.value = true;
       final stateNotifier = ref.read(resetPasswordStateProvider.notifier);
 
       final isValid = stateNotifier.validateConfirmCode();
@@ -128,11 +139,15 @@ class ResetPasswordConformEmailState
 
       context.router.push(CreateNewPasswordRoute());
     } catch (_) {
-      if (!mounted) return;
+      if (!context.mounted) return;
 
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
+    } finally {
+      if (context.mounted) {
+        isSubmitting.value = false;
+      }
     }
   }
 }
