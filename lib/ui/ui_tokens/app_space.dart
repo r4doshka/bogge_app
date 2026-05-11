@@ -44,6 +44,8 @@ class AppSpace {
   static SizedBox get h36 => SizedBox(height: s36.h);
   static SizedBox get h40 => SizedBox(height: s40.h);
   static SizedBox get h44 => SizedBox(height: s44.h);
+  static SizedBox get h48 => SizedBox(height: s48.h);
+  static SizedBox get h60 => SizedBox(height: s60.h);
   static SizedBox get h68 => SizedBox(height: s68.h);
 
   // width gaps
@@ -79,6 +81,12 @@ class AppSpace {
       EdgeInsetsDirectional.symmetric(horizontal: s24.w);
   static EdgeInsetsDirectional get ph32 =>
       EdgeInsetsDirectional.symmetric(horizontal: s32.w);
+  static EdgeInsetsDirectional get ph36 =>
+      EdgeInsetsDirectional.symmetric(horizontal: s36.w);
+  static EdgeInsetsDirectional get ph40 =>
+      EdgeInsetsDirectional.symmetric(horizontal: s40.w);
+  static EdgeInsetsDirectional get ph52 =>
+      EdgeInsetsDirectional.symmetric(horizontal: s52.w);
 
   // padding vertical
   static EdgeInsetsDirectional get pv4 =>

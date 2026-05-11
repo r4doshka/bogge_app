@@ -23,6 +23,7 @@ class OnboardingGenderScreen extends HookConsumerWidget {
     final palette = ref.read(paletteProvider);
     final user = ref.watch(userProvider);
     final sexType = useState<SexType?>(user?.sex);
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: SafeArea(
@@ -56,9 +57,12 @@ class OnboardingGenderScreen extends HookConsumerWidget {
               Spacer(),
               PrimaryButton(
                 text: 'Далее'.tr(),
-                onPress: sexType.value == null
+                isLoading: isSubmitting.value,
+                onPress: sexType.value == null || isSubmitting.value
                     ? null
                     : () async {
+                        isSubmitting.value = true;
+
                         try {
                           if (sexType.value != user?.sex) {
                             final data = UpdateUser(sex: sexType.value);
@@ -87,6 +91,10 @@ class OnboardingGenderScreen extends HookConsumerWidget {
                               ),
                             );
                             return;
+                          }
+                        } finally {
+                          if (context.mounted) {
+                            isSubmitting.value = false;
                           }
                         }
                       },

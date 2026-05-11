@@ -13,10 +13,31 @@ class UserNotifier extends StateNotifier<UserModel?> {
   UserNotifier(this.ref) : super(null);
 
   static final dateOfBirthFieldName = 'dateOfBirth';
+  static final nameFieldName = 'name';
+  static final surnameFieldName = 'surname';
 
   final FormGroup dateOfBirthForm = FormGroup({
     dateOfBirthFieldName: FormControl<String>(
       validators: [Validators.required],
+    ),
+  });
+
+  final FormGroup userNameForm = FormGroup({
+    nameFieldName: FormControl<String>(
+      validators: [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(r"^[a-zA-Zа-яА-ЯёЁ\s'-]+$"),
+      ],
+    ),
+    surnameFieldName: FormControl<String>(
+      validators: [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(r"^[a-zA-Zа-яА-ЯёЁ\s'-]+$"),
+      ],
     ),
   });
 

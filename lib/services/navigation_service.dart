@@ -119,6 +119,11 @@ class NavigationService {
       debugPrint('NavigationService pop =====> $stack');
     }
   }
+
+  Future<void> replaceAll(List<PageRouteInfo> routes) async {
+    _navigatorObserver.clearStack();
+    await _appRouter.value.replaceAll(routes);
+  }
 }
 
 final navigationServiceProvider = Provider<NavigationService>((ref) {

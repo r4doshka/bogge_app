@@ -24,6 +24,7 @@ class OnboardingHeightScreen extends HookConsumerWidget {
     final palette = ref.read(paletteProvider);
     final state = ref.watch(userProvider);
     final currentHeight = useState<double>(state?.height ?? 173.2);
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: SafeArea(
@@ -61,34 +62,52 @@ class OnboardingHeightScreen extends HookConsumerWidget {
               AppSpace.h24,
               PrimaryButton(
                 text: 'Далее'.tr(),
-                onPress: () async {
-                  try {
-                    if (!isSameDouble(state?.height, currentHeight.value)) {
-                      final data = UpdateUser(height: currentHeight.value);
-                      final newUser = await ref
-                          .read(userProvider.notifier)
-                          .updateUser(data);
+                isLoading: isSubmitting.value,
+                onPress: isSubmitting.value
+                    ? null
+                    : () async {
+                        isSubmitting.value = true;
 
-                      if (newUser?.height == null && context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Что-то пошло не так'.tr())),
-                        );
-                        return;
-                      }
-                    }
-                    if (context.mounted) {
-                      context.router.push(const OnboardingWeightRoute());
-                      return;
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Что-то пошло не так'.tr())),
-                      );
-                      return;
-                    }
-                  }
-                },
+                        try {
+                          if (!isSameDouble(
+                            state?.height,
+                            currentHeight.value,
+                          )) {
+                            final data = UpdateUser(
+                              height: currentHeight.value,
+                            );
+                            final newUser = await ref
+                                .read(userProvider.notifier)
+                                .updateUser(data);
+
+                            if (newUser?.height == null && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Что-то пошло не так'.tr()),
+                                ),
+                              );
+                              return;
+                            }
+                          }
+                          if (context.mounted) {
+                            context.router.push(const OnboardingWeightRoute());
+                            return;
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Что-то пошло не так'.tr()),
+                              ),
+                            );
+                            return;
+                          }
+                        } finally {
+                          if (context.mounted) {
+                            isSubmitting.value = false;
+                          }
+                        }
+                      },
               ),
             ],
           ),

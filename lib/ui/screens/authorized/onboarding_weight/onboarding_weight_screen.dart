@@ -25,6 +25,7 @@ class OnboardingWeightScreen extends HookConsumerWidget {
     final palette = ref.read(paletteProvider);
     final state = ref.watch(userProvider);
     final currentWeight = useState<double>(state?.weight ?? 65.0);
+    final isSubmitting = useState(false);
 
     return Scaffold(
       body: SafeArea(
@@ -64,34 +65,52 @@ class OnboardingWeightScreen extends HookConsumerWidget {
               AppSpace.h24,
               PrimaryButton(
                 text: 'Далее'.tr(),
-                onPress: () async {
-                  try {
-                    if (!isSameDouble(state?.weight, currentWeight.value)) {
-                      final data = UpdateUser(weight: currentWeight.value);
-                      final newUser = await ref
-                          .read(userProvider.notifier)
-                          .updateUser(data);
+                isLoading: isSubmitting.value,
+                onPress: isSubmitting.value
+                    ? null
+                    : () async {
+                        isSubmitting.value = true;
 
-                      if (newUser?.weight == null && context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Что-то пошло не так'.tr())),
-                        );
-                        return;
-                      }
-                    }
-                    if (context.mounted) {
-                      context.router.push(const OnboardingNameRoute());
-                      return;
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Что-то пошло не так'.tr())),
-                      );
-                      return;
-                    }
-                  }
-                },
+                        try {
+                          if (!isSameDouble(
+                            state?.weight,
+                            currentWeight.value,
+                          )) {
+                            final data = UpdateUser(
+                              weight: currentWeight.value,
+                            );
+                            final newUser = await ref
+                                .read(userProvider.notifier)
+                                .updateUser(data);
+
+                            if (newUser?.weight == null && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Что-то пошло не так'.tr()),
+                                ),
+                              );
+                              return;
+                            }
+                          }
+                          if (context.mounted) {
+                            context.router.push(const OnboardingNameRoute());
+                            return;
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Что-то пошло не так'.tr()),
+                              ),
+                            );
+                            return;
+                          }
+                        } finally {
+                          if (context.mounted) {
+                            isSubmitting.value = false;
+                          }
+                        }
+                      },
               ),
             ],
           ),

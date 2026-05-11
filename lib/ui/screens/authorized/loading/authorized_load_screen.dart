@@ -92,48 +92,31 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
 
   Future<void> _handleValidToken() async {
     await ref.read(appDataInitializerProvider).initialize();
+
     final user = ref.read(userProvider);
 
-    if (user?.sex == null) {
-      await _navigate([const OnboardingGenderRoute()]);
-      return;
-    }
-    if (user?.dateOfBirth == null) {
-      await _navigate([
-        const OnboardingGenderRoute(),
-        const OnboardingAgeRoute(),
-      ]);
-      return;
-    }
-    if (user?.height == null) {
-      await _navigate([
-        const OnboardingGenderRoute(),
-        const OnboardingAgeRoute(),
-        const OnboardingHeightRoute(),
-      ]);
-      return;
-    }
-    if (user?.weight == null) {
-      await _navigate([
-        const OnboardingGenderRoute(),
-        const OnboardingAgeRoute(),
-        const OnboardingHeightRoute(),
-        const OnboardingWeightRoute(),
-      ]);
-      return;
-    }
-    if (user?.name == null) {
-      await _navigate([
-        const OnboardingGenderRoute(),
-        const OnboardingAgeRoute(),
-        const OnboardingHeightRoute(),
-        const OnboardingWeightRoute(),
-        const OnboardingNameRoute(),
-      ]);
+    final steps = <({bool completed, PageRouteInfo route})>[
+      (completed: user?.sex != null, route: const OnboardingGenderRoute()),
+      (completed: user?.dateOfBirth != null, route: const OnboardingAgeRoute()),
+      (completed: user?.height != null, route: const OnboardingHeightRoute()),
+      (completed: user?.weight != null, route: const OnboardingWeightRoute()),
+      (completed: user?.name != null, route: const OnboardingNameRoute()),
+      (completed: false, route: const OnboardingAppleHealthRoute()),
+    ];
+
+    final firstIncompleteIndex = steps.indexWhere((step) => !step.completed);
+
+    if (firstIncompleteIndex == -1) {
+      await _navigate([const HomeRoute()]);
       return;
     }
 
-    await _navigate([const HomeRoute()]);
+    final routes = steps
+        .take(firstIncompleteIndex + 1)
+        .map((step) => step.route)
+        .toList();
+
+    await _navigate(routes);
   }
 
   Future<void> _navigate(List<PageRouteInfo> routeList) async {
@@ -141,8 +124,8 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
     ref.read(authProvider.notifier).setCurrentFlow(FlowType.authorized);
     await Future.delayed(Duration(milliseconds: 10));
     if (mounted) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.router.replaceAll(routeList);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await ref.read(navigationServiceProvider).replaceAll(routeList);
       });
     }
     stopwatch.stop();

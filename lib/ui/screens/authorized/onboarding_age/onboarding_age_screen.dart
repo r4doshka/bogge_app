@@ -28,6 +28,7 @@ class OnboardingAgeScreen extends HookConsumerWidget {
     final userNotifier = ref.watch(userProvider.notifier);
     final state = ref.watch(userProvider);
 
+    final isSubmitting = useState(false);
     final showDatePicker = useState(state?.dateOfBirth != null);
     final currentDate = useState<DateTime?>(state?.dateOfBirth);
     final localeCode = context.locale.languageCode;
@@ -123,11 +124,16 @@ class OnboardingAgeScreen extends HookConsumerWidget {
                         ReactiveFormConsumer(
                           builder: (context, form, _) => PrimaryButton(
                             text: 'Далее'.tr(),
-                            onPress: form.valid && currentDate.value != null
+                            isLoading: isSubmitting.value,
+                            onPress:
+                                form.valid &&
+                                    currentDate.value != null &&
+                                    !isSubmitting.value
                                 ? () => handleSubmit(
                                     context: context,
                                     ref: ref,
                                     currentDate: currentDate.value,
+                                    isSubmitting: isSubmitting,
                                   )
                                 : null,
                           ),
@@ -148,14 +154,20 @@ class OnboardingAgeScreen extends HookConsumerWidget {
     required BuildContext context,
     required WidgetRef ref,
     required DateTime? currentDate,
+    required ValueNotifier<bool> isSubmitting,
   }) async {
     if (currentDate == null) return;
+
+    isSubmitting.value = true;
 
     final notifier = ref.read(userProvider.notifier);
 
     final isDateChanged = notifier.isDateOfBirthChanged(currentDate);
     if (!isDateChanged) {
       context.router.push(const OnboardingHeightRoute());
+      if (context.mounted) {
+        isSubmitting.value = false;
+      }
       return;
     }
 
@@ -181,6 +193,10 @@ class OnboardingAgeScreen extends HookConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
+      }
+    } finally {
+      if (context.mounted) {
+        isSubmitting.value = false;
       }
     }
   }
