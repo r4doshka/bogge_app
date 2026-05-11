@@ -5,8 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ModalTitle extends ConsumerWidget {
   final String label;
+  final TextStyle? textStyle;
 
-  const ModalTitle({super.key, required this.label});
+  const ModalTitle({super.key, required this.label, this.textStyle});
 
   @override
   Widget build(context, ref) {
@@ -14,7 +15,7 @@ class ModalTitle extends ConsumerWidget {
 
     return Text(
       label,
-      style: text_s15_w600_lsm043.copyWith(color: palette.text),
+      style: textStyle ?? text_s15_w600_lsm043.copyWith(color: palette.text),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,

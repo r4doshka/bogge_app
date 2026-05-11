@@ -56,6 +56,8 @@ class AppSpace {
   static SizedBox get w20 => SizedBox(width: s20.w);
   static SizedBox get w24 => SizedBox(width: s24.w);
   static SizedBox get w32 => SizedBox(width: s32.w);
+  static SizedBox get w44 => SizedBox(width: s44.w);
+  static SizedBox get w48 => SizedBox(width: s48.w);
 
   // padding all
   static EdgeInsetsDirectional get p4 => EdgeInsetsDirectional.all(s4.w);

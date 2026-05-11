@@ -67,7 +67,7 @@ Future<void> showDefaultModalBottom<T>({
                         ? ModalTitle(label: title)
                         : const SizedBox(),
                   ),
-                  SizedBox(width: 50.w, child: const SizedBox()),
+                  AppSpace.w48,
                 ],
               ),
             ),

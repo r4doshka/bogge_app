@@ -27,7 +27,8 @@ enum AppModalList {
   internetWarning,
   userAgreement,
   privacyPolicy,
-  emptyProfile;
+  emptyProfile,
+  editUserName;
 
   String get title => "${name}Modal";
 }
