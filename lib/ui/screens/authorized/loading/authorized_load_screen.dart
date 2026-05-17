@@ -108,14 +108,16 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
     }
 
     final user = ref.read(userProvider);
-
     final steps = <({bool completed, PageRouteInfo route})>[
       (completed: user?.sex != null, route: const OnboardingGenderRoute()),
       (completed: user?.dateOfBirth != null, route: const OnboardingAgeRoute()),
       (completed: user?.height != null, route: const OnboardingHeightRoute()),
       (completed: user?.weight != null, route: const OnboardingWeightRoute()),
       (completed: user?.name != null, route: const OnboardingNameRoute()),
-      (completed: true, route: const OnboardingAppleHealthRoute()),
+      (
+        completed: user?.appleHealthConnected == true,
+        route: const OnboardingAppleHealthRoute(),
+      ),
     ];
 
     final firstIncompleteIndex = steps.indexWhere((step) => !step.completed);

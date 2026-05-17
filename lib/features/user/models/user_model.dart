@@ -10,6 +10,7 @@ class UserModel {
   final bool isEmailVerified;
   final String? name;
   final String? surname;
+  @SexTypeConverter()
   final SexType? sex;
   final DateTime? dateOfBirth;
   final double? height;
@@ -60,6 +61,16 @@ class UserModel {
     );
   }
 
+  static SexType? fromCode(int? code) {
+    if (code == null) return null;
+
+    for (final item in SexType.values) {
+      if (item.code == code) return item;
+    }
+
+    return null;
+  }
+
   String? get fullName => '${name ?? ''} ${surname ?? ''}';
   String get formattedHeight => formatHeight(height);
   String get formattedWeight => formatWeight(weight);
@@ -93,4 +104,14 @@ class UserModel {
   String toString() {
     return "email: $email, name: $name, surname: $surname, sex: $sex, dateOfBirth: $dateOfBirth, height: $height, weight: $weight, isEmailVerified: $isEmailVerified, appleHealthConnected: $appleHealthConnected";
   }
+}
+
+class SexTypeConverter implements JsonConverter<SexType?, int?> {
+  const SexTypeConverter();
+
+  @override
+  SexType? fromJson(int? json) => SexType.fromCode(json);
+
+  @override
+  int? toJson(SexType? object) => object?.code;
 }

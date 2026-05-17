@@ -33,7 +33,8 @@ enum AppModalList {
   editGender,
   editHeight,
   editWeight,
-  editUserEmail;
+  editUserEmail,
+  feedback;
 
   String get title => "${name}Modal";
 }

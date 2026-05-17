@@ -1,17 +1,14 @@
+import 'package:bogge_app/features/user/models/user_model.dart';
 import 'package:bogge_app/utils/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'update_user.g.dart';
 
-class Nullable<T> {
-  final T? value;
-  const Nullable(this.value);
-}
-
 @JsonSerializable(includeIfNull: false)
 class UpdateUser {
   final String? name;
   final String? surname;
+  @SexTypeConverter()
   final SexType? sex;
   final String? dateOfBirth;
   final double? height;
@@ -31,6 +28,16 @@ class UpdateUser {
 
   Map<String, dynamic> toJson() => _$UpdateUserToJson(this);
 
+  static SexType? fromCode(int? code) {
+    if (code == null) return null;
+
+    for (final item in SexType.values) {
+      if (item.code == code) return item;
+    }
+
+    return null;
+  }
+
   UpdateUser copyWith({
     Nullable<String>? name,
     Nullable<String>? surname,
@@ -49,4 +56,9 @@ class UpdateUser {
       weight: weight != null ? weight.value : this.weight,
     );
   }
+}
+
+class Nullable<T> {
+  final T? value;
+  const Nullable(this.value);
 }

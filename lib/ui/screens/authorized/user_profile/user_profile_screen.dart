@@ -13,6 +13,7 @@ import 'package:bogge_app/ui/widgets/modals/edit_gender_modal.dart';
 import 'package:bogge_app/ui/widgets/modals/edit_height_modal.dart';
 import 'package:bogge_app/ui/widgets/modals/edit_user_name_modal.dart';
 import 'package:bogge_app/ui/widgets/modals/edit_weight_modal.dart';
+import 'package:bogge_app/ui/widgets/modals/feedback_modal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -144,7 +145,7 @@ class UserProfileScreen extends ConsumerWidget {
           final palette = ref.watch(paletteProvider);
 
           return Text(
-            gender?.name.toTitleCase ?? '',
+            gender?.label.toTitleCase ?? '',
             style: text_s17_w400_lsm043.copyWith(color: palette.text60),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -199,7 +200,7 @@ class UserProfileScreen extends ConsumerWidget {
     SettingsSectionChildModel(
       title: 'Обратная связь'.tr(),
       iconPath: 'assets/icons/calendar-icon.svg',
-      onPress: () => showEditUserNameModalBottom(context: context),
+      onPress: () => showFeedbackModalBottom(context: context),
     ),
   ];
 }

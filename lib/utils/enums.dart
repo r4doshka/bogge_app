@@ -53,13 +53,20 @@ enum RequestFailureType {
 }
 
 enum SexType {
-  male('Мужской'),
-  female('Женский');
+  male(1, 'Мужской'),
+  female(2, 'Женский');
 
+  final int code;
   final String label;
+
+  static SexType? fromCode(int? code) {
+    if (code == null) return null;
+
+    return SexType.values.where((el) => el.code == code).firstOrNull;
+  }
 
   static List<RadioButtonModel<SexType>> get options =>
       values.map((el) => RadioButtonModel(label: el.label, value: el)).toList();
 
-  const SexType(this.label);
+  const SexType(this.code, this.label);
 }

@@ -11,7 +11,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
   email: json['email'] as String,
   name: json['name'] as String?,
   surname: json['surname'] as String?,
-  sex: $enumDecodeNullable(_$SexTypeEnumMap, json['sex']),
+  sex: const SexTypeConverter().fromJson((json['sex'] as num?)?.toInt()),
   dateOfBirth: json['dateOfBirth'] == null
       ? null
       : DateTime.parse(json['dateOfBirth'] as String),
@@ -25,11 +25,9 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
   'isEmailVerified': instance.isEmailVerified,
   'name': instance.name,
   'surname': instance.surname,
-  'sex': _$SexTypeEnumMap[instance.sex],
+  'sex': const SexTypeConverter().toJson(instance.sex),
   'dateOfBirth': instance.dateOfBirth?.toIso8601String(),
   'height': instance.height,
   'weight': instance.weight,
   'appleHealthConnected': instance.appleHealthConnected,
 };
-
-const _$SexTypeEnumMap = {SexType.male: 'male', SexType.female: 'female'};

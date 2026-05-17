@@ -28,6 +28,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
   final bool obscureText;
   final List<String>? hiddenErrors;
   final bool readOnly;
+  final int maxLines;
 
   const ReactiveInputField({
     required this.fieldName,
@@ -48,6 +49,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
     this.obscureText = false,
     this.hiddenErrors,
     this.readOnly = false,
+    this.maxLines = 1,
     super.key,
   });
 
@@ -99,6 +101,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                   borderRadius: AppBorderRadius.all24,
                 ),
                 child: ReactiveTextField<T>(
+                  maxLines: maxLines,
                   readOnly: readOnly,
                   formControlName: fieldName,
                   focusNode: focusNode,
@@ -107,6 +110,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                   obscuringCharacter: '*',
                   showErrors: (control) => false,
                   decoration: InputDecoration(
+                    alignLabelWithHint: maxLines > 1 ? true : null,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     errorBorder: InputBorder.none,

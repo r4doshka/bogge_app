@@ -8,6 +8,7 @@ import 'package:bogge_app/models/router/router_model.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/check_button.dart';
+import 'package:bogge_app/ui/widgets/containers/dismiss_keyboard_container.dart';
 import 'package:bogge_app/ui/widgets/form/pin_code_fields.dart';
 import 'package:bogge_app/ui/widgets/form/reactive_form/reactive_input_field.dart';
 import 'package:bogge_app/ui/widgets/modals/widgets/default_modal_bottom.dart';
@@ -30,7 +31,7 @@ Future<void> showEditUserEmailModalBottom({
     minHeight: mediaQuery.size.height * 0.94,
     hasCloseButton: false,
     modalName: AppModalList.editUserName.title,
-    child: EditUserEmailContainer(),
+    child: DismissKeyboardContainer(child: EditUserEmailContainer()),
   );
 }
 
