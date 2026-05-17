@@ -25,6 +25,7 @@ class ModalCloseButton extends ConsumerWidget {
       onPress: () {
         if (onClose != null) {
           onClose!();
+          return;
         }
         context.router.pop();
       },

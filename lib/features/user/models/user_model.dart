@@ -14,6 +14,7 @@ class UserModel {
   final DateTime? dateOfBirth;
   final double? height;
   final double? weight;
+  final bool appleHealthConnected;
 
   UserModel({
     required this.isEmailVerified,
@@ -24,6 +25,7 @@ class UserModel {
     this.dateOfBirth,
     this.height,
     this.weight,
+    this.appleHealthConnected = false,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +45,7 @@ class UserModel {
     String? role,
     int? tokenVersion,
     bool? isEmailVerified,
+    bool? appleHealthConnected,
   }) {
     return UserModel(
       email: email ?? this.email,
@@ -53,6 +56,7 @@ class UserModel {
       height: height ?? this.height,
       weight: weight ?? this.weight,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      appleHealthConnected: appleHealthConnected ?? this.appleHealthConnected,
     );
   }
 
@@ -87,6 +91,6 @@ class UserModel {
 
   @override
   String toString() {
-    return "email: $email, name: $name, surname: $surname, sex: $sex, dateOfBirth: $dateOfBirth, height: $height, weight: $weight, isEmailVerified: $isEmailVerified";
+    return "email: $email, name: $name, surname: $surname, sex: $sex, dateOfBirth: $dateOfBirth, height: $height, weight: $weight, isEmailVerified: $isEmailVerified, appleHealthConnected: $appleHealthConnected";
   }
 }

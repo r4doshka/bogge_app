@@ -6,6 +6,7 @@ import 'package:bogge_app/models/router/router_model.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/check_button.dart';
+import 'package:bogge_app/ui/widgets/form/date_picker.dart';
 import 'package:bogge_app/ui/widgets/form/reactive_form/reactive_input_field.dart';
 import 'package:bogge_app/ui/widgets/modals/widgets/default_modal_bottom.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
@@ -18,21 +19,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-Future<void> showEditUserNameModalBottom({
-  required BuildContext context,
-}) async {
+Future<void> showEditAgeModalBottom({required BuildContext context}) async {
   final mediaQuery = MediaQuery.of(context);
   return await showDefaultModalBottom(
     context: context,
     minHeight: mediaQuery.size.height * 0.94,
     hasCloseButton: false,
-    modalName: AppModalList.editUserName.title,
-    child: EditUserNameModal(),
+    modalName: AppModalList.editAge.title,
+    child: EditAgeModal(),
   );
 }
 
-class EditUserNameModal extends HookConsumerWidget {
-  const EditUserNameModal({super.key});
+class EditAgeModal extends HookConsumerWidget {
+  const EditAgeModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,19 +40,20 @@ class EditUserNameModal extends HookConsumerWidget {
     final userNotifier = ref.watch(userProvider.notifier);
     final isSubmitting = useState(false);
 
+    final showDatePicker = useState(false);
+    final currentDate = useState<DateTime?>(state?.dateOfBirth);
+    final localeCode = context.locale.languageCode;
+
     useEffect(() {
-      final name = state?.name;
+      final date = state?.dateOfBirth;
 
-      if (name != null) {
-        userNotifier.userNameForm.control(UserNotifier.nameFieldName).value =
-            name;
-      }
+      if (date != null) {
+        final formatted = DateFormat('d MMMM yyyy', localeCode).format(date);
 
-      final surname = state?.surname;
-
-      if (surname != null) {
-        userNotifier.userNameForm.control(UserNotifier.surnameFieldName).value =
-            surname;
+        userNotifier.dateOfBirthForm
+                .control(UserNotifier.dateOfBirthFieldName)
+                .value =
+            formatted;
       }
       return () {};
     }, []);
@@ -61,7 +61,7 @@ class EditUserNameModal extends HookConsumerWidget {
     return Padding(
       padding: AppSpace.ph16,
       child: ReactiveForm(
-        formGroup: userNotifier.userNameForm,
+        formGroup: userNotifier.dateOfBirthForm,
         child: Column(
           children: [
             Row(
@@ -77,7 +77,7 @@ class EditUserNameModal extends HookConsumerWidget {
                 ),
                 Expanded(
                   child: ModalTitle(
-                    label: 'Имя'.tr(),
+                    label: 'Дата рождения'.tr(),
                     textStyle: text_s17_w600_lsm043.copyWith(
                       color: palette.text,
                     ),
@@ -90,6 +90,7 @@ class EditUserNameModal extends HookConsumerWidget {
                             context: context,
                             ref: ref,
                             isSubmitting: isSubmitting,
+                            currentDate: currentDate.value,
                           )
                         : null,
                   ),
@@ -97,22 +98,50 @@ class EditUserNameModal extends HookConsumerWidget {
               ],
             ),
             AppSpace.h32,
-            ReactiveInputField<String>(
-              fieldName: UserNotifier.nameFieldName,
-              keyboardType: TextInputType.text,
-              labelText: 'Имя'.tr(),
-              hiddenErrors: ['required', 'minLength', 'pattern'],
+
+            GestureDetector(
+              onTap: () => showDatePicker.value = true,
+              child: AbsorbPointer(
+                child: ReactiveInputField<String>(
+                  fieldName: UserNotifier.dateOfBirthFieldName,
+                  keyboardType: TextInputType.datetime,
+                  labelText: 'Дата рождения'.tr(),
+                  hiddenErrors: ['required'],
+                  inputFormatters: [],
+                ),
+              ),
             ),
-            AppSpace.h8,
-            ReactiveInputField<String>(
-              fieldName: UserNotifier.surnameFieldName,
-              keyboardType: TextInputType.text,
-              labelText: 'Фамилия'.tr(),
-              hiddenErrors: ['required', 'minLength', 'pattern'],
-            ),
+
+            if (showDatePicker.value) ...[
+              AppSpace.h8,
+              DatePicker(
+                initialValue: [currentDate.value],
+                onValueChanged: (val) {
+                  if (val.isNotEmpty && val[0] != null) {
+                    final date = val[0]!;
+                    currentDate.value = date;
+
+                    final formatted = DateFormat(
+                      'd MMMM yyyy',
+                      context.locale.languageCode,
+                    ).format(date);
+
+                    userNotifier.dateOfBirthForm
+                            .control(UserNotifier.dateOfBirthFieldName)
+                            .value =
+                        formatted;
+
+                    userNotifier.dateOfBirthForm
+                        .control(UserNotifier.dateOfBirthFieldName)
+                        .markAsTouched();
+                  }
+                },
+              ),
+            ],
+
             AppSpace.h16,
             Text(
-              'Здесь вы можете изменить Имя и Фамилию пользователя'.tr(),
+              'Здесь вы можете изменить дату своего рождения'.tr(),
               style: text_s14_w400_ls01.copyWith(color: palette.text60),
               textAlign: TextAlign.center,
             ),
@@ -125,53 +154,27 @@ class EditUserNameModal extends HookConsumerWidget {
   Future<void> handleSubmit({
     required BuildContext context,
     required WidgetRef ref,
+    required DateTime? currentDate,
     required ValueNotifier<bool> isSubmitting,
   }) async {
-    isSubmitting.value = true;
+    if (currentDate == null) return;
+
     final notifier = ref.read(userProvider.notifier);
-    FocusScope.of(context).unfocus();
-    notifier.userNameForm.unfocus();
 
-    final state = ref.read(userProvider);
-
-    final currentName = state?.name;
-    final currentSurname = state?.surname;
-
-    final name =
-        notifier.userNameForm
-            .control(UserNotifier.nameFieldName)
-            .value
-            .trim() ??
-        '';
-    final surname =
-        notifier.userNameForm
-            .control(UserNotifier.surnameFieldName)
-            .value
-            .trim() ??
-        '';
-
-    if (notifier.userNameForm.invalid) {
-      return;
-    }
-
-    if (currentName == name && currentSurname == surname) {
-      context.router.pop();
-      if (context.mounted) {
-        isSubmitting.value = false;
-      }
+    final isDateChanged = notifier.isDateOfBirthChanged(currentDate);
+    if (!isDateChanged && context.mounted) {
       return;
     }
 
     try {
-      final data = UpdateUser(
-        name: currentName != name ? name : null,
-        surname: currentSurname != surname ? surname : null,
-      );
+      isSubmitting.value = true;
+      final selectedIso = DateFormat('yyyy-MM-dd').format(currentDate);
+
+      final data = UpdateUser(dateOfBirth: selectedIso);
 
       final newUser = await ref.read(userProvider.notifier).updateUser(data);
 
-      if ((newUser?.name == null || newUser?.surname == null) &&
-          context.mounted) {
+      if (newUser?.dateOfBirth == null && context.mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Что-то пошло не так'.tr())));
@@ -179,7 +182,6 @@ class EditUserNameModal extends HookConsumerWidget {
       }
 
       if (context.mounted) {
-        notifier.userNameForm.reset();
         context.router.pop();
       }
     } catch (e) {

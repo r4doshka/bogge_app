@@ -6,6 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 enum AuthBackendErrorCode {
   userAlreadyExists,
+  emailAlreadyInUse,
   invalidCredentials,
   invalidOrExpiredCode,
   invalidResponse,
@@ -23,6 +24,8 @@ extension BackendErrorCodeX on AuthBackendErrorCode {
         return AuthBackendErrorCode.invalidOrExpiredCode;
       case 'SERVER':
         return AuthBackendErrorCode.invalidResponse;
+      case 'EMAIL_ALREADY_IN_USE':
+        return AuthBackendErrorCode.emailAlreadyInUse;
       default:
         return AuthBackendErrorCode.unknown;
     }
@@ -41,6 +44,9 @@ void handleFormError({
       return;
 
     case AuthBackendErrorCode.userAlreadyExists:
+      return;
+
+    case AuthBackendErrorCode.emailAlreadyInUse:
       return;
 
     case AuthBackendErrorCode.invalidCredentials:

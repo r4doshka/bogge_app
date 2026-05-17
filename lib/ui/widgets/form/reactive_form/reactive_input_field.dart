@@ -96,7 +96,7 @@ class ReactiveInputField<T> extends HookConsumerWidget {
                 ),
                 decoration: BoxDecoration(
                   color: inputColor ?? palette.white,
-                  borderRadius: AppBorderRadius.all16,
+                  borderRadius: AppBorderRadius.all24,
                 ),
                 child: ReactiveTextField<T>(
                   readOnly: readOnly,

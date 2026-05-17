@@ -17,6 +17,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       : DateTime.parse(json['dateOfBirth'] as String),
   height: (json['height'] as num?)?.toDouble(),
   weight: (json['weight'] as num?)?.toDouble(),
+  appleHealthConnected: json['appleHealthConnected'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -28,6 +29,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
   'dateOfBirth': instance.dateOfBirth?.toIso8601String(),
   'height': instance.height,
   'weight': instance.weight,
+  'appleHealthConnected': instance.appleHealthConnected,
 };
 
 const _$SexTypeEnumMap = {SexType.male: 'male', SexType.female: 'female'};

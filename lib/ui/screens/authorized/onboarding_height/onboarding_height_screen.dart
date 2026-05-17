@@ -91,7 +91,6 @@ class OnboardingHeightScreen extends HookConsumerWidget {
                           }
                           if (context.mounted) {
                             context.router.push(const OnboardingWeightRoute());
-                            return;
                           }
                         } catch (e) {
                           if (context.mounted) {

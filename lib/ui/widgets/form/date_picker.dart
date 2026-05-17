@@ -57,10 +57,6 @@ class DatePicker extends HookConsumerWidget {
                 Color bgColor = Colors.transparent;
                 Color textColor = palette.text;
 
-                if (isCurrentYear == true) {
-                  bgColor = palette.primary12;
-                }
-
                 if (isDisabled == true) {
                   textColor = palette.text30;
                 }
@@ -256,6 +252,7 @@ class DatePicker extends HookConsumerWidget {
 
         onDisplayedMonthChanged: (val) {
           displayedMonth.value = val;
+          onValueChanged([val]);
         },
         onValueChanged: (val) {
           date.value = val;

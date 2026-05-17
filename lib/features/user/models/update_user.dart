@@ -34,6 +34,7 @@ class UpdateUser {
   UpdateUser copyWith({
     Nullable<String>? name,
     Nullable<String>? surname,
+    Nullable<String>? email,
     Nullable<SexType>? sex,
     Nullable<String>? dateOfBirth,
     Nullable<double>? height,

@@ -13,6 +13,8 @@ class UserNotifier extends StateNotifier<UserModel?> {
   UserNotifier(this.ref) : super(null);
 
   static final dateOfBirthFieldName = 'dateOfBirth';
+  static final heightFieldName = 'height';
+  static final weightFieldName = 'weight';
   static final nameFieldName = 'name';
   static final surnameFieldName = 'surname';
 
@@ -20,6 +22,14 @@ class UserNotifier extends StateNotifier<UserModel?> {
     dateOfBirthFieldName: FormControl<String>(
       validators: [Validators.required],
     ),
+  });
+
+  final FormGroup heightForm = FormGroup({
+    heightFieldName: FormControl<String>(validators: [Validators.required]),
+  });
+
+  final FormGroup weightForm = FormGroup({
+    weightFieldName: FormControl<String>(validators: [Validators.required]),
   });
 
   final FormGroup userNameForm = FormGroup({

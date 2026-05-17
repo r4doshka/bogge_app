@@ -1,8 +1,10 @@
 import 'package:bogge_app/features/auth/api/backend_error_code_parser.dart';
 import 'package:bogge_app/features/auth/api/backend_success_code_parser.dart';
+import 'package:bogge_app/features/auth/models/change_email_state.dart';
 import 'package:bogge_app/features/auth/models/reset_password_state.dart';
 import 'package:bogge_app/features/auth/models/sign_up_state.dart';
 import 'package:bogge_app/features/auth/models/token_response.dart';
+import 'package:bogge_app/features/auth/providers/change_email_provider.dart';
 import 'package:bogge_app/features/auth/providers/reset_password_provider.dart';
 import 'package:bogge_app/features/auth/providers/sign_in_provider.dart';
 import 'package:bogge_app/features/auth/providers/sign_up_provider.dart';
@@ -34,6 +36,8 @@ abstract class AuthRepository {
   Future<void> logout();
   Future<TokenStatus> checkToken();
   Future<bool> refreshToken();
+  Future<void> getUpdateEmailConfirmCode();
+  Future<void> confirmUpdateEmail();
 }
 
 class AuthRepositoryAPI implements AuthRepository {
@@ -362,5 +366,86 @@ class AuthRepositoryAPI implements AuthRepository {
     }
 
     return tokensSaved;
+  }
+
+  @override
+  Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
+  getUpdateEmailConfirmCode() async {
+    final state = ref.watch(changeEmailStateProvider);
+
+    final String email = state.userEmailForm
+        .control(ChangeEmailState.emailFieldName)
+        .value;
+
+    return await ref
+        .read(httpProvider.notifier)
+        .post(
+          query: '$path/change-email/request',
+          type: AuthType.basic,
+          data: {"email": email},
+          errorMapper: BackendErrorCodeX.fromCode,
+          successMapper: AuthSuccessCodeX.fromCode,
+        );
+  }
+
+  @override
+  Future<ApiResponse<void, AuthBackendErrorCode, AuthSuccessCode>>
+  confirmUpdateEmail() async {
+    final state = ref.read(changeEmailStateProvider);
+
+    final String email = state.userEmailForm
+        .control(SignUpState.emailFieldName)
+        .value;
+    final confirmCode = state.confirmCode;
+
+    final response = await ref
+        .read(httpProvider.notifier)
+        .post(
+          query: '$path/change-email/confirm',
+          type: AuthType.basic,
+          data: {"email": email, "code": confirmCode},
+          errorMapper: BackendErrorCodeX.fromCode,
+          successMapper: AuthSuccessCodeX.fromCode,
+        );
+
+    if (!response.success || response.data == null) {
+      return response;
+    }
+
+    bool tokensSaved = false;
+
+    try {
+      final user = ref.read(userProvider);
+
+      if (user != null) {
+        final newUser = user.copyWith(email: email);
+        ref.read(userProvider.notifier).setUser(newUser);
+      }
+
+      final json = response.data as Map<String, dynamic>;
+
+      final token = TokenResponse.fromJson(json);
+
+      final storage = ref.read(storageServiceProvider);
+
+      await storage.writeAccessToken(token.accessToken);
+      await storage.writeRefreshToken(token.refreshToken);
+      await ref.read(authProvider.notifier).loadLoginState();
+      await ref.read(httpProvider.notifier).setHeaders();
+
+      tokensSaved = true;
+    } catch (e, trace) {
+      debugPrint('Token parse error: $e, $trace');
+    }
+
+    if (!tokensSaved) {
+      return ApiResponse(
+        success: false,
+        code: RequestFailureType.server.name.toUpperCase(),
+        message: 'Invalid auth response',
+      );
+    }
+
+    return response;
   }
 }

@@ -7,7 +7,12 @@ import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/logout_button.dart';
 import 'package:bogge_app/ui/widgets/headers/nested_header.dart';
+import 'package:bogge_app/ui/widgets/modals/edit_age_modal.dart';
+import 'package:bogge_app/ui/widgets/modals/edit_email_modal.dart';
+import 'package:bogge_app/ui/widgets/modals/edit_gender_modal.dart';
+import 'package:bogge_app/ui/widgets/modals/edit_height_modal.dart';
 import 'package:bogge_app/ui/widgets/modals/edit_user_name_modal.dart';
+import 'package:bogge_app/ui/widgets/modals/edit_weight_modal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -84,7 +89,7 @@ class UserProfileScreen extends ConsumerWidget {
     SettingsSectionChildModel(
       title: 'Почта'.tr(),
       iconPath: 'assets/icons/email-icon.svg',
-      onPress: () => showEditUserNameModalBottom(context: context),
+      onPress: () => showEditUserEmailModalBottom(context: context),
       rightPartRenderer: () => Consumer(
         builder: (context, ref, _) {
           final email = ref.watch(userProvider)?.email;
@@ -108,7 +113,7 @@ class UserProfileScreen extends ConsumerWidget {
     SettingsSectionChildModel(
       title: 'Дата рождения'.tr(),
       iconPath: 'assets/icons/calendar-icon.svg',
-      onPress: () => showEditUserNameModalBottom(context: context),
+      onPress: () => showEditAgeModalBottom(context: context),
       rightPartRenderer: () => Consumer(
         builder: (context, ref, _) {
           final date = ref.watch(userProvider)?.dateOfBirth;
@@ -132,7 +137,7 @@ class UserProfileScreen extends ConsumerWidget {
     SettingsSectionChildModel(
       title: 'Пол'.tr(),
       iconPath: 'assets/icons/gender-icon.svg',
-      onPress: () => showEditUserNameModalBottom(context: context),
+      onPress: () => showEditGenderModalBottom(context: context),
       rightPartRenderer: () => Consumer(
         builder: (context, ref, _) {
           final gender = ref.watch(userProvider)?.sex;
@@ -151,7 +156,7 @@ class UserProfileScreen extends ConsumerWidget {
     SettingsSectionChildModel(
       title: 'Рост'.tr(),
       iconPath: 'assets/icons/height-icon.svg',
-      onPress: () => showEditUserNameModalBottom(context: context),
+      onPress: () => showEditHeightModalBottom(context: context),
       rightPartRenderer: () => Consumer(
         builder: (context, ref, _) {
           final height = ref.watch(userProvider)?.formattedHeight;
@@ -170,7 +175,7 @@ class UserProfileScreen extends ConsumerWidget {
     SettingsSectionChildModel(
       title: 'Вес'.tr(),
       iconPath: 'assets/icons/weight-icon.svg',
-      onPress: () => showEditUserNameModalBottom(context: context),
+      onPress: () => showEditWeightModalBottom(context: context),
       rightPartRenderer: () => Consumer(
         builder: (context, ref, _) {
           final weight = ref.watch(userProvider)?.formattedWeight;

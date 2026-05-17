@@ -82,7 +82,6 @@ class OnboardingNameScreen extends HookConsumerWidget {
                           keyboardType: TextInputType.text,
                           labelText: 'Имя'.tr(),
                           hiddenErrors: ['required', 'minLength', 'pattern'],
-                          inputFormatters: [],
                         ),
                         AppSpace.h8,
                         ReactiveInputField<String>(
@@ -90,7 +89,6 @@ class OnboardingNameScreen extends HookConsumerWidget {
                           keyboardType: TextInputType.text,
                           labelText: 'Фамилия'.tr(),
                           hiddenErrors: ['required', 'minLength', 'pattern'],
-                          inputFormatters: [],
                         ),
                         Spacer(),
                         ReactiveFormConsumer(
