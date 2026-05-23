@@ -41,5 +41,19 @@ class AuthorizedRouter extends RootStackRouter {
       page: UserProfileRoute.page,
       path: AppRoutesList.userProfile.link,
     ),
+    AutoRoute(page: DevicesRoute.page, path: AppRoutesList.devices.link),
+    AutoRoute(page: WorkoutRoute.page, path: AppRoutesList.workout.link),
+    AutoRoute(
+      page: WorkoutPrepareRoute.page,
+      path: AppRoutesList.workoutPrepare.link,
+    ),
+    AutoRoute(
+      page: WorkoutFinishRoute.page,
+      path: AppRoutesList.workoutFinish.link,
+    ),
+    AutoRoute(
+      page: WorkoutDetailRoute.page,
+      path: AppRoutesList.workoutDetail.link,
+    ),
   ];
 }

@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/features/bluetooth/providers/ftms_provider.dart';
+import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_border_radius.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
@@ -41,13 +43,14 @@ class BluetoothButton extends ConsumerWidget {
         color: palette.primary12,
         borderRadius: AppBorderRadius.all24,
       ),
-      onPress: () async {
-        if (state.isConnected) {
-          ref.read(ftmsProvider.notifier).disconnect();
-          return;
-        }
-        ref.read(ftmsProvider.notifier).connect();
-      },
+      onPress: () => context.router.push(DevicesRoute()),
+      // onPress: () {
+      // if (state.isConnected) {
+      //   ref.read(ftmsProvider.notifier).disconnect();
+      //   return;
+      // }
+      // ref.read(ftmsProvider.notifier).connect();
+      // },
       child: Row(
         children: [
           SvgPicture.asset(

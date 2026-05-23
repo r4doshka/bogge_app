@@ -60,13 +60,13 @@ class AppSpace {
   static SizedBox get w48 => SizedBox(width: s48.w);
 
   // padding all
-  static EdgeInsetsDirectional get p4 => EdgeInsetsDirectional.all(s4.w);
-  static EdgeInsetsDirectional get p8 => EdgeInsetsDirectional.all(s8.w);
-  static EdgeInsetsDirectional get p12 => EdgeInsetsDirectional.all(s12.w);
-  static EdgeInsetsDirectional get p16 => EdgeInsetsDirectional.all(s16.w);
-  static EdgeInsetsDirectional get p20 => EdgeInsetsDirectional.all(s20.w);
-  static EdgeInsetsDirectional get p24 => EdgeInsetsDirectional.all(s24.w);
-  static EdgeInsetsDirectional get p32 => EdgeInsetsDirectional.all(s32.w);
+  static EdgeInsetsDirectional get p4 => EdgeInsetsDirectional.all(s4.spMin);
+  static EdgeInsetsDirectional get p8 => EdgeInsetsDirectional.all(s8.spMin);
+  static EdgeInsetsDirectional get p12 => EdgeInsetsDirectional.all(s12.spMin);
+  static EdgeInsetsDirectional get p16 => EdgeInsetsDirectional.all(s16.spMin);
+  static EdgeInsetsDirectional get p20 => EdgeInsetsDirectional.all(s20.spMin);
+  static EdgeInsetsDirectional get p24 => EdgeInsetsDirectional.all(s24.spMin);
+  static EdgeInsetsDirectional get p32 => EdgeInsetsDirectional.all(s32.spMin);
 
   // padding horizontal
   static EdgeInsetsDirectional get ph4 =>

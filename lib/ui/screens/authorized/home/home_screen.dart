@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bogge_app/features/bluetooth/providers/ftms_provider.dart';
+import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
@@ -7,6 +8,7 @@ import 'package:bogge_app/ui/widgets/banners/start_workout_banner.dart';
 import 'package:bogge_app/ui/widgets/buttons/bluetooth_button.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_button.dart';
 import 'package:bogge_app/ui/widgets/buttons/profile_button.dart';
+import 'package:bogge_app/ui/widgets/lists/workout_list.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -37,7 +39,13 @@ class HomeScreen extends ConsumerWidget {
                 'Тренировки'.tr(),
                 style: text_s34_w700_ls04.copyWith(color: palette.text),
               ),
+              AppSpace.h16,
+              WorkoutList(),
               // EmptyWorkouts(),
+              PrimaryButton(
+                text: 'prepare',
+                onPress: () => context.router.push(WorkoutPrepareRoute()),
+              ),
               PrimaryButton(
                 text: 'start',
                 onPress: () async {

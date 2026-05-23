@@ -70,3 +70,30 @@ enum SexType {
 
   const SexType(this.code, this.label);
 }
+
+enum ScanStatus { inProgress, error, success }
+
+enum WorkoutStatType {
+  steps(title: 'Шаги', unit: '', iconPath: 'assets/icons/step-icon.svg'),
+  duration(title: 'Время', unit: 'ч', iconPath: 'assets/icons/timer-icon.svg'),
+  calories(
+    title: 'Калории',
+    unit: 'ккал',
+    iconPath: 'assets/icons/fire-icon.svg',
+  ),
+  distance(
+    title: 'Дистанция',
+    unit: 'км',
+    iconPath: 'assets/icons/location-icon.svg',
+  );
+
+  final String title;
+  final String unit;
+  final String iconPath;
+
+  const WorkoutStatType({
+    required this.title,
+    required this.unit,
+    required this.iconPath,
+  });
+}

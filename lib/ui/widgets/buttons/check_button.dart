@@ -1,7 +1,7 @@
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
+import 'package:bogge_app/ui/ui_tokens/box_shadows.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_icon_button.dart';
-import 'package:bogge_app/utils/box_shadows.dart';
 import 'package:bogge_app/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

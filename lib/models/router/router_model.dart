@@ -16,7 +16,12 @@ enum AppRoutesList {
   onboardingName,
   onboardingAppleHealth,
   home,
-  userProfile;
+  userProfile,
+  devices,
+  workout,
+  workoutPrepare,
+  workoutFinish,
+  workoutDetail;
 
   const AppRoutesList();
 
@@ -34,7 +39,8 @@ enum AppModalList {
   editHeight,
   editWeight,
   editUserEmail,
-  feedback;
+  feedback,
+  deviceConnect;
 
   String get title => "${name}Modal";
 }

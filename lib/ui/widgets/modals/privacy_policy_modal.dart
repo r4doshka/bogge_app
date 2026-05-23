@@ -1,7 +1,7 @@
 import 'package:bogge_app/models/router/router_model.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
-import 'package:bogge_app/ui/ui_tokens/app_border_radius.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
+import 'package:bogge_app/ui/widgets/list_item/text_with_dot_item.dart';
 import 'package:bogge_app/ui/widgets/modals/widgets/default_modal_bottom.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -66,61 +66,15 @@ class PrivacyPolicyModal extends ConsumerWidget {
                 .tr(),
             style: text_s14_w400_lsm043.copyWith(color: palette.text),
           ),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Dot(),
-              AppSpace.w4,
-              Text('контактные данные (например, email)'.tr()),
-            ],
+          TextWithDotItem(text: 'контактные данные (например, email)'.tr()),
+          TextWithDotItem(text: 'данные аккаунта и авторизации'.tr()),
+          TextWithDotItem(
+            text:
+                'технические данные устройства (тип устройства, версия ОС, идентификаторы)'
+                    .tr(),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Dot(),
-              AppSpace.w4,
-              Text('данные аккаунта и авторизации'.tr()),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Dot(),
-              AppSpace.w4,
-              Expanded(
-                child: Text(
-                  'технические данные устройства (тип устройства, версия ОС, идентификаторы)'
-                      .tr(),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _Dot(),
-              AppSpace.w4,
-              Text('данные об использовании приложения'.tr()),
-            ],
-          ),
+          TextWithDotItem(text: 'данные об использовании приложения'.tr()),
         ],
-      ),
-    );
-  }
-}
-
-class _Dot extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final palette = ref.watch(paletteProvider);
-    return Container(
-      margin: EdgeInsetsDirectional.only(top: AppSpace.s8.h),
-      width: 3.w,
-      height: 3.w,
-      decoration: BoxDecoration(
-        color: palette.text,
-        borderRadius: AppBorderRadius.all12,
       ),
     );
   }

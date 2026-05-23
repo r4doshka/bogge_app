@@ -28,27 +28,27 @@ class CommonNavigatorObserver extends AutoRouterObserver {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     final notifier = ref.read(navigationStoreProvider.notifier);
-    final stack = ref.read(navigationStoreProvider);
     Future.microtask(() {
       notifier.replaceRoute(oldRoute, newRoute);
-    });
 
-    debugPrint(
-      'Stack after replace: ${stack.map((r) => _routeName(r)).toList()}',
-    );
+      final updatedStack = ref.read(navigationStoreProvider);
+      debugPrint(
+        'Stack after replace: ${updatedStack.map((r) => _routeName(r)).toList()}',
+      );
+    });
   }
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     final notifier = ref.read(navigationStoreProvider.notifier);
-    final stack = ref.read(navigationStoreProvider);
     Future.microtask(() {
       notifier.removeRoute(route);
-    });
 
-    debugPrint(
-      'Stack after remove: ${stack.map((r) => _routeName(r)).toList()}',
-    );
+      final updatedStack = ref.read(navigationStoreProvider);
+      debugPrint(
+        'Stack after remove: ${updatedStack.map((r) => _routeName(r)).toList()}',
+      );
+    });
   }
 
   void _updateStack(

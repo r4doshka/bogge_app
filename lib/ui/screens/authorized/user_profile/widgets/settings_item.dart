@@ -3,11 +3,11 @@ import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/containers/highlight_container.dart';
+import 'package:bogge_app/utils/get_stat_item_border_radius.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:bogge_app/ui/ui_tokens/app_border_radius.dart';
 
 class SettingsItem extends ConsumerWidget {
   final SettingsSectionModel item;
@@ -113,34 +113,6 @@ class SettingsItem extends ConsumerWidget {
   BorderRadius getBorderRadius(SettingsSectionChildModel child) {
     final isLastItem = getIsLastItem(child);
     final isFirstItem = getIsFirstItem(child);
-
-    if (isLastItem && isFirstItem) {
-      return const BorderRadius.only(
-        topLeft: AppBorderRadius.r24,
-        topRight: AppBorderRadius.r24,
-        bottomLeft: AppBorderRadius.r24,
-        bottomRight: AppBorderRadius.r24,
-      );
-    }
-
-    if (isFirstItem) {
-      return const BorderRadius.only(
-        topLeft: AppBorderRadius.r24,
-        topRight: AppBorderRadius.r24,
-        bottomLeft: Radius.zero,
-        bottomRight: Radius.zero,
-      );
-    }
-
-    if (isLastItem) {
-      return const BorderRadius.only(
-        topLeft: Radius.zero,
-        topRight: Radius.zero,
-        bottomLeft: AppBorderRadius.r24,
-        bottomRight: AppBorderRadius.r24,
-      );
-    }
-
-    return BorderRadius.zero;
+    return getStatItemBorderRadius(isLastItem, isFirstItem);
   }
 }

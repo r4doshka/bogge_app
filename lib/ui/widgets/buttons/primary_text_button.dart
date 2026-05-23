@@ -12,6 +12,9 @@ class PrimaryTextButton extends ConsumerWidget {
   final Function()? onPress;
   final EdgeInsetsDirectional? padding;
   final Color backgroundColor;
+  final BorderRadius? borderRadius;
+  final TextAlign? textAlign;
+  final double? height;
 
   const PrimaryTextButton({
     super.key,
@@ -20,6 +23,9 @@ class PrimaryTextButton extends ConsumerWidget {
     this.textStyle,
     this.textColor,
     this.padding,
+    this.borderRadius,
+    this.textAlign,
+    this.height,
     this.backgroundColor = Colors.transparent,
   });
 
@@ -36,10 +42,11 @@ class PrimaryTextButton extends ConsumerWidget {
       child: Material(
         color: Colors.transparent,
         clipBehavior: Clip.hardEdge,
-        borderRadius: BorderRadius.zero,
+        borderRadius: borderRadius ?? BorderRadius.zero,
         child: InkWell(
           onTap: onPress,
           child: Ink(
+            height: height,
             padding:
                 padding ??
                 EdgeInsetsDirectional.symmetric(
@@ -48,9 +55,11 @@ class PrimaryTextButton extends ConsumerWidget {
                 ),
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.zero,
+              borderRadius: borderRadius ?? BorderRadius.zero,
             ),
-            child: Text(text, style: textStyles),
+            child: Center(
+              child: Text(text, style: textStyles, textAlign: textAlign),
+            ),
           ),
         ),
       ),
