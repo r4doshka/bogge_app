@@ -1,3 +1,4 @@
+import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
@@ -13,6 +14,13 @@ class SpeedRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
+
+    final speed = ref.watch(
+      ftmsProvider.select((s) {
+        final value = s.targetSpeed ?? s.workoutData?.speed ?? 0;
+        return value.toStringAsFixed(1);
+      }),
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +40,7 @@ class SpeedRow extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  '0',
+                  speed,
                   style: text_s48_w900_lsm043.copyWith(color: palette.text),
                 ),
                 AppSpace.w4,

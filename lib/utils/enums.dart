@@ -71,7 +71,26 @@ enum SexType {
   const SexType(this.code, this.label);
 }
 
-enum ScanStatus { inProgress, error, success }
+enum ScanStatus { initial, inProgress, success, empty, error }
+
+enum ConnectionStatus {
+  initial,
+  connecting,
+  connected,
+  disconnecting,
+  disconnected,
+  error,
+}
+
+enum TreadmillStatus { idle, running, paused, stopped }
+
+enum WorkoutSpeedControlType {
+  increase(iconPath: 'assets/icons/plus-icon.svg'),
+  decrease(iconPath: 'assets/icons/minus-icon.svg');
+
+  final String iconPath;
+  const WorkoutSpeedControlType({required this.iconPath});
+}
 
 enum WorkoutStatType {
   steps(title: 'Шаги', unit: '', iconPath: 'assets/icons/step-icon.svg'),

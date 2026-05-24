@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_border_radius.dart';
@@ -7,17 +8,29 @@ import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/countdown_timer_circle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 @RoutePage()
-class WorkoutPrepareScreen extends ConsumerWidget {
+class WorkoutPrepareScreen extends HookConsumerWidget {
   const WorkoutPrepareScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
+
+    useEffect(() {
+      func() async {
+        Future.delayed(Duration(milliseconds: 500));
+        ref.read(ftmsProvider.notifier).startTreadmill();
+      }
+
+      func();
+
+      return () {};
+    }, []);
 
     return Scaffold(
       body: SafeArea(

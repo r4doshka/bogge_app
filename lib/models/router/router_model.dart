@@ -40,7 +40,7 @@ enum AppModalList {
   editWeight,
   editUserEmail,
   feedback,
-  deviceConnect;
+  deviceScan;
 
   String get title => "${name}Modal";
 }

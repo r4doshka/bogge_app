@@ -1,16 +1,16 @@
+import 'package:bogge_app/features/ftms/models/paired_ftms_devices.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
-import 'package:bogge_app/ui/widgets/list_item/device_list_item.dart';
+import 'package:bogge_app/ui/widgets/list_item/saved_device_list_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DeviceList extends ConsumerWidget {
-  final List<ScanResult> list;
-  final void Function(BluetoothDevice item)? onConnect;
+class SavedDeviceList extends ConsumerWidget {
+  final List<PairedFtmsDevice> list;
+  final void Function()? onDisconnect;
 
-  const DeviceList({required this.list, this.onConnect, super.key});
+  const SavedDeviceList({required this.list, this.onDisconnect, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,13 +29,8 @@ class DeviceList extends ConsumerWidget {
           ),
         ),
       ),
-      itemBuilder: (context, index) {
-        final item = list[index];
-        return DeviceListItem(
-          item: item,
-          onConnect: onConnect != null ? () => onConnect!(item.device) : null,
-        );
-      },
+      itemBuilder: (context, index) =>
+          SavedDeviceListItem(item: list[index], onDisconnect: onDisconnect),
     );
   }
 }

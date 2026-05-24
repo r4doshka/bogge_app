@@ -1,20 +1,56 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_border_radius.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_button.dart';
+import 'package:bogge_app/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 
-class StartWorkoutBanner extends ConsumerWidget {
+class StartWorkoutBanner extends HookConsumerWidget {
   const StartWorkoutBanner({super.key});
+
+  Future<void> handleStartWorkout(BuildContext context, WidgetRef ref) async {
+    if (!context.mounted) return;
+
+    await ref.read(ftmsProvider.notifier).startDeviceFlow(context);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
+    final state = ref.watch(ftmsProvider);
+
+    final isActive = state.connectionStatus == ConnectionStatus.connected;
+
+    final shouldNavigateAfterConnect = useState(false);
+
+    ref.listen<ConnectionStatus>(
+      ftmsProvider.select((s) => s.connectionStatus),
+      (previous, next) {
+        if (!shouldNavigateAfterConnect.value) return;
+
+        if (next == ConnectionStatus.connected) {
+          shouldNavigateAfterConnect.value = false;
+
+          if (context.mounted) {
+            context.router.push(WorkoutPrepareRoute());
+          }
+        }
+
+        if (next == ConnectionStatus.error ||
+            next == ConnectionStatus.disconnected) {
+          shouldNavigateAfterConnect.value = false;
+        }
+      },
+    );
 
     return Stack(
       children: [
@@ -68,7 +104,16 @@ class StartWorkoutBanner extends ConsumerWidget {
                           height: 14.h,
                         ),
                       ),
-                      onPress: () {},
+                      onPress: () async {
+                        if (isActive) {
+                          context.router.push(WorkoutPrepareRoute());
+                          return;
+                        }
+
+                        shouldNavigateAfterConnect.value = true;
+
+                        await handleStartWorkout(context, ref);
+                      },
                     ),
                   ),
                   SizedBox(height: 14.h),

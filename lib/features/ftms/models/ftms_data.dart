@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 class FtmsData {
   final double speed; // km/h
   final double? distance; // km
@@ -14,6 +16,44 @@ class FtmsData {
     this.heartRate,
     this.elapsedTime,
   });
+
+  String formattedElapsedTime() {
+    final duration = Duration(seconds: elapsedTime ?? 0);
+
+    final minutes = duration.inMinutes.toString().padLeft(2, '0');
+
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+
+    return '$minutes:$seconds,00';
+  }
+
+  String formattedSpeed([String locale = 'ru']) {
+    return NumberFormat('0.0', locale).format(speed);
+  }
+
+  String formattedDistance([String locale = 'ru']) {
+    if (distance == null) {
+      return '0.00';
+    }
+
+    return NumberFormat('0.00', locale).format(distance);
+  }
+
+  String formattedIncline([String locale = 'ru']) {
+    if (incline == null) {
+      return '0.0';
+    }
+
+    return NumberFormat('0.0', locale).format(incline);
+  }
+
+  String get formattedCalories {
+    return '${calories ?? 0}';
+  }
+
+  String get formattedHeartRate {
+    return '${heartRate ?? 0}';
+  }
 
   @override
   String toString() {

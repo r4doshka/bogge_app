@@ -13,6 +13,7 @@ class PrimaryIconButton extends ConsumerWidget {
   final double? containerHeight;
   final BorderRadius? borderRadius;
   final void Function()? onPress;
+  final void Function()? onLongPress;
   final Color backgroundColor;
   final bool matchTextDirection;
   final BoxBorder? border;
@@ -23,6 +24,7 @@ class PrimaryIconButton extends ConsumerWidget {
     super.key,
     required this.svgPath,
     this.onPress,
+    this.onLongPress,
     this.iconWidth = 24,
     this.iconHeight = 24,
     this.containerWidth = 24,
@@ -50,6 +52,7 @@ class PrimaryIconButton extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       child: InkWell(
         onTap: onPress,
+        onLongPress: onLongPress,
         splashColor: highlightColor ?? palette.text.withSafeOpacity(0.1),
         highlightColor: highlightColor ?? palette.text.withSafeOpacity(0.1),
         child: Ink(

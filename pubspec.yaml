@@ -32,7 +32,8 @@ dependencies:
   string_extensions: ^0.8.4
   json_annotation: ^4.11.0
   calendar_date_picker2: ^2.0.1
-  flutter_blue_plus: ^2.2.1
+  flutter_blue_plus: ^2.3.3
+  app_settings: ^7.0.0
 
 
 dev_dependencies:

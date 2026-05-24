@@ -1,3 +1,4 @@
+import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
@@ -13,6 +14,10 @@ class CaloriesRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
+
+    final calories = ref.watch(
+      ftmsProvider.select((s) => s.workoutData?.formattedCalories),
+    );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +37,7 @@ class CaloriesRow extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  '0',
+                  calories ?? '',
                   style: text_s48_w900_lsm043.copyWith(color: palette.text),
                 ),
                 AppSpace.w4,

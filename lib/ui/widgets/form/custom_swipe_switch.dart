@@ -94,12 +94,12 @@ class CustomSwipeSwitch extends HookConsumerWidget {
 
                     await controller.animateTo(
                       1,
-                      duration: const Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.fastLinearToSlowEaseIn,
                     );
 
                     final elapsed = DateTime.now().difference(startedAt);
-                    final minDelay = const Duration(milliseconds: 550);
+                    final minDelay = const Duration(milliseconds: 350);
 
                     if (elapsed < minDelay) {
                       await Future.delayed(minDelay - elapsed);
@@ -114,7 +114,7 @@ class CustomSwipeSwitch extends HookConsumerWidget {
 
                     await controller.animateTo(
                       0,
-                      duration: const Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.fastLinearToSlowEaseIn,
                     );
 
@@ -131,7 +131,7 @@ class CustomSwipeSwitch extends HookConsumerWidget {
 
                   await controller.animateTo(
                     value ? 0 : 1,
-                    duration: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 400),
                     curve: Curves.fastLinearToSlowEaseIn,
                   );
                 },

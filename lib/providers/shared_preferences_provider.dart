@@ -1,3 +1,4 @@
+import 'package:bogge_app/features/ftms/models/paired_ftms_devices.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,7 @@ final sharedPreferencesServiceProvider = Provider<SharedPreferencesService>((
 });
 
 class SharedPreferencesService {
+  static const _pairedFtmsDevicesKey = 'pairedFtmsDevices';
   final SharedPreferences preferences;
   SharedPreferencesService(this.preferences);
 
@@ -32,4 +34,37 @@ class SharedPreferencesService {
   String? getEnvBaseUrls() => preferences.getString('selectedEnvironment');
 
   Future<bool> removeItem(String key) async => preferences.remove(key);
+
+  List<PairedFtmsDevice> getPairedFtmsDevices() {
+    final list = preferences.getStringList(_pairedFtmsDevicesKey) ?? [];
+
+    return list.map(PairedFtmsDevice.decode).toList();
+  }
+
+  Future<bool> setPairedFtmsDevices(List<PairedFtmsDevice> devices) async {
+    return preferences.setStringList(
+      _pairedFtmsDevicesKey,
+      devices.map((item) => item.encode()).toList(),
+    );
+  }
+
+  Future<bool> addPairedFtmsDevice(PairedFtmsDevice device) async {
+    final devices = getPairedFtmsDevices();
+
+    final alreadyExists = devices.any(
+      (item) => item.remoteId == device.remoteId,
+    );
+
+    if (alreadyExists) return true;
+
+    return setPairedFtmsDevices([...devices, device]);
+  }
+
+  Future<bool> removePairedFtmsDevice(String remoteId) async {
+    final devices = getPairedFtmsDevices();
+
+    return setPairedFtmsDevices(
+      devices.where((item) => item.remoteId != remoteId).toList(),
+    );
+  }
 }

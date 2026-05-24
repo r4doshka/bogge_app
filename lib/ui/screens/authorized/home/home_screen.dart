@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:bogge_app/features/bluetooth/providers/ftms_provider.dart';
+import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
@@ -47,19 +47,8 @@ class HomeScreen extends ConsumerWidget {
                 onPress: () => context.router.push(WorkoutPrepareRoute()),
               ),
               PrimaryButton(
-                text: 'start',
-                onPress: () async {
-                  await ref.read(ftmsProvider.notifier).requestControl();
-                  await ref.read(ftmsProvider.notifier).start();
-                  // await ref.read(ftmsProvider.notifier).setSpeed(3.0);
-                  // await ref.read(ftmsProvider.notifier).stop();
-                },
-              ),
-              PrimaryButton(
-                text: 'stop',
-                onPress: () async {
-                  await ref.read(ftmsProvider.notifier).stop();
-                },
+                text: 'disconnect',
+                onPress: () => ref.read(ftmsProvider.notifier).disconnect(),
               ),
             ],
           ),

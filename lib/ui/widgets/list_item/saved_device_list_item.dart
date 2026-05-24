@@ -1,31 +1,29 @@
+import 'package:bogge_app/features/ftms/models/paired_ftms_devices.dart';
 import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
-import 'package:bogge_app/ui/ui_tokens/box_shadows.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/buttons/primary_button.dart';
-import 'package:bogge_app/ui/widgets/spinner.dart';
 import 'package:bogge_app/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DeviceListItem extends ConsumerWidget {
-  final ScanResult item;
-  final void Function()? onConnect;
+class SavedDeviceListItem extends ConsumerWidget {
+  final PairedFtmsDevice item;
+  final void Function()? onDisconnect;
 
-  const DeviceListItem({required this.item, this.onConnect, super.key});
+  const SavedDeviceListItem({required this.item, this.onDisconnect, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
     final state = ref.watch(ftmsProvider);
 
-    final isConnecting =
-        state.connectionStatus == ConnectionStatus.connecting &&
-        state.connectingDeviceId == item.device.remoteId;
+    final isConnected =
+        state.connectionStatus == ConnectionStatus.connected &&
+        state.device?.remoteId.str == item.remoteId;
 
     return Padding(
       padding: EdgeInsetsDirectional.only(top: AppSpace.s4),
@@ -42,7 +40,7 @@ class DeviceListItem extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.advertisementData.advName,
+                  item.name,
                   style: text_s17_w500_lsm043.copyWith(color: palette.text),
                 ),
                 Text(
@@ -52,35 +50,21 @@ class DeviceListItem extends ConsumerWidget {
               ],
             ),
           ),
-          if (isConnecting)
+          if (isConnected)
             PrimaryButton(
-              text: 'Подключение'.tr(),
+              text: 'Отключить'.tr(),
+              backgroundColor: palette.cancelDark,
               textStyle: text_s14_w500_lsm043.copyWith(color: palette.white),
-              backgroundColor: palette.primaryDark,
               padding: EdgeInsetsDirectional.symmetric(
                 vertical: 7.h,
                 horizontal: 14.w,
               ),
-              renderLeftIcon: () => Padding(
-                padding: EdgeInsetsDirectional.only(end: AppSpace.s8),
-                child: Spinner(width: 12.w, height: 12.h, strokeWidth: 2.w),
-              ),
-              onPress: () {},
+              onPress: onDisconnect,
             )
           else
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: AppBoxShadows.buttonSmallBoxShadow,
-              ),
-              child: PrimaryButton(
-                text: 'Подключить'.tr(),
-                textStyle: text_s14_w500_lsm043.copyWith(color: palette.white),
-                padding: EdgeInsetsDirectional.symmetric(
-                  vertical: 7.h,
-                  horizontal: 14.w,
-                ),
-                onPress: onConnect,
-              ),
+            Text(
+              'Не подключено'.tr(),
+              style: text_s17_w400_lsm043.copyWith(color: palette.text60),
             ),
         ],
       ),
