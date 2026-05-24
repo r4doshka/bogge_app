@@ -380,4 +380,12 @@ class FtmsController extends Notifier<FtmsState> {
       _isSpeedChanging = false;
     }
   }
+
+  void saveLastWorkoutData() {
+    final data = state.workoutData;
+
+    if (data == null) return;
+
+    state = state.copyWith(lastWorkoutData: data);
+  }
 }

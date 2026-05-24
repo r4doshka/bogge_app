@@ -92,7 +92,11 @@ class WorkoutControlPanel extends HookConsumerWidget {
                         svgPath: 'assets/icons/cross1-icon.svg',
                         title: 'Завершить'.tr(),
                         onPress: () async {
-                          await ref.read(ftmsProvider.notifier).stopTreadmill();
+                          final notifier = ref.read(ftmsProvider.notifier);
+
+                          notifier.saveLastWorkoutData();
+
+                          await notifier.stopTreadmill();
 
                           if (context.mounted) {
                             context.router.replace(WorkoutFinishRoute());

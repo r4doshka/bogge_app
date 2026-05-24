@@ -13,13 +13,13 @@ class StatisticListItem extends ConsumerWidget {
   final WorkoutStatType item;
   final String value;
   final BorderRadius? borderRadius;
-  final void Function() onPress;
+  final void Function()? onPress;
   final bool isLast;
 
   const StatisticListItem({
-    required this.onPress,
     required this.item,
     required this.value,
+    this.onPress,
     this.borderRadius,
     this.isLast = false,
     super.key,
@@ -63,7 +63,6 @@ class StatisticListItem extends ConsumerWidget {
                     style: text_s17_w400_lsm043.copyWith(color: palette.text),
                   ),
                   AppSpace.w20,
-
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -74,22 +73,24 @@ class StatisticListItem extends ConsumerWidget {
                             style: text_s17_w400_lsm043.copyWith(
                               color: palette.primary,
                             ),
+                            textAlign: TextAlign.end,
                           ),
                         ),
                       ],
                     ),
                   ),
                   AppSpace.w16,
-                  SvgPicture.asset(
-                    'assets/icons/chevron-right-icon.svg',
-                    width: AppSpace.s16.w,
-                    height: AppSpace.s16.w,
-                    colorFilter: ColorFilter.mode(
-                      palette.text30,
-                      BlendMode.srcIn,
+                  if (onPress != null)
+                    SvgPicture.asset(
+                      'assets/icons/chevron-right-icon.svg',
+                      width: AppSpace.s16.w,
+                      height: AppSpace.s16.w,
+                      colorFilter: ColorFilter.mode(
+                        palette.text30,
+                        BlendMode.srcIn,
+                      ),
+                      matchTextDirection: true,
                     ),
-                    matchTextDirection: true,
-                  ),
                 ],
               ),
             ),

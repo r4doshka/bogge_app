@@ -15,6 +15,7 @@ class FtmsState {
   final List<ScanResult> devices;
   final BluetoothDevice? device;
   final String? error;
+  final FtmsData? lastWorkoutData;
 
   const FtmsState({
     this.scanStatus = ScanStatus.initial,
@@ -28,6 +29,7 @@ class FtmsState {
     this.error,
     this.connectingDeviceId,
     this.targetSpeed,
+    this.lastWorkoutData,
   });
 
   FtmsState copyWith({
@@ -45,6 +47,8 @@ class FtmsState {
     TreadmillStatus? treadmillStatus,
     double? targetSpeed,
     bool clearTargetSpeed = false,
+    FtmsData? lastWorkoutData,
+    bool clearLastWorkoutData = false,
   }) {
     return FtmsState(
       scanStatus: scanStatus ?? this.scanStatus,
@@ -60,6 +64,9 @@ class FtmsState {
       savedDevices: savedDevices ?? this.savedDevices,
       treadmillStatus: treadmillStatus ?? this.treadmillStatus,
       targetSpeed: clearTargetSpeed ? null : targetSpeed ?? this.targetSpeed,
+      lastWorkoutData: clearLastWorkoutData
+          ? null
+          : lastWorkoutData ?? this.lastWorkoutData,
     );
   }
 

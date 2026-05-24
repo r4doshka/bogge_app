@@ -1,3 +1,5 @@
+import 'package:bogge_app/features/ftms/helpers/estimate_steps_by_height.dart';
+import 'package:bogge_app/features/ftms/helpers/format_distance.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class FtmsData {
@@ -31,12 +33,10 @@ class FtmsData {
     return NumberFormat('0.0', locale).format(speed);
   }
 
-  String formattedDistance([String locale = 'ru']) {
-    if (distance == null) {
-      return '0.00';
-    }
+  int get roundDistance => ((distance ?? 0) * 1000).round();
 
-    return NumberFormat('0.00', locale).format(distance);
+  String formattedDistance([String locale = 'ru']) {
+    return formatDistanceMeters(roundDistance, locale);
   }
 
   String formattedIncline([String locale = 'ru']) {
@@ -53,6 +53,37 @@ class FtmsData {
 
   String get formattedHeartRate {
     return '${heartRate ?? 0}';
+  }
+
+  String formattedSteps({required double heightCm, required double distance}) {
+    return estimatedStepsByHeight(
+      heightCm: heightCm,
+      distance: distance,
+    ).toString();
+  }
+
+  String get formattedDuration {
+    final duration = Duration(seconds: elapsedTime ?? 0);
+
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+
+    final parts = <String>[];
+
+    if (hours > 0) {
+      parts.add('$hours ч');
+    }
+
+    if (minutes > 0) {
+      parts.add('$minutes мин');
+    }
+
+    if (seconds > 0 || parts.isEmpty) {
+      parts.add('$seconds сек');
+    }
+
+    return parts.join(' ');
   }
 
   @override

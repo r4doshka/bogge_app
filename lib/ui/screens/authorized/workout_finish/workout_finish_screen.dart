@@ -1,4 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/features/ftms/helpers/estimate_steps_by_height.dart';
+import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
+import 'package:bogge_app/features/user/providers/user_provider.dart';
+import 'package:bogge_app/features/workouts/api/workout_api.dart';
+import 'package:bogge_app/features/workouts/models/create_workout_dto.dart';
+import 'package:bogge_app/features/workouts/models/workout_stat_values.dart';
+import 'package:bogge_app/features/workouts/providers/pagination_workout_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
@@ -16,6 +23,12 @@ class WorkoutFinishScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
 
+    final lastWorkoutData = ref.watch(
+      ftmsProvider.select((s) => s.lastWorkoutData),
+    );
+    final device = ref.watch(ftmsProvider.select((s) => s.device));
+    final user = ref.watch(userProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -25,7 +38,41 @@ class WorkoutFinishScreen extends ConsumerWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [CheckButton(onPress: () => context.router.pop())],
+                children: [
+                  CheckButton(
+                    onPress: () async {
+                      if (lastWorkoutData == null || user == null) {
+                        context.router.pop();
+                        return;
+                      }
+
+                      final dto = CreateWorkoutDto(
+                        title: device?.advName ?? 'Беговая дорожка',
+                        distance: ((lastWorkoutData.distance ?? 0) * 1000)
+                            .round(),
+                        duration: lastWorkoutData.elapsedTime ?? 0,
+                        calories: lastWorkoutData.calories ?? 0,
+                        steps: estimatedStepsByHeight(
+                          heightCm: user.height ?? 170,
+                          distance: lastWorkoutData.distance ?? 0,
+                        ),
+                      );
+
+                      final createdWorkout = await ref
+                          .read(workoutRepository)
+                          .createWorkout(dto);
+
+                      if (createdWorkout != null) {
+                        ref.invalidate(totalWorkoutCountProvider);
+                        ref.invalidate(paginatedWorkoutsProvider);
+                      }
+
+                      if (context.mounted) {
+                        context.router.pop();
+                      }
+                    },
+                  ),
+                ],
               ),
               AppSpace.h8,
               Text(
@@ -37,7 +84,13 @@ class WorkoutFinishScreen extends ConsumerWidget {
                 style: text_s14_w400_ls01.copyWith(color: palette.primary),
               ),
               AppSpace.h16,
-              StatList(),
+              if (lastWorkoutData != null && user != null)
+                StatList(
+                  values: WorkoutStatValues.fromFtms(
+                    data: lastWorkoutData,
+                    user: user,
+                  ),
+                ),
             ],
           ),
         ),

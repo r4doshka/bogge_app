@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i25;
+import 'package:bogge_app/features/workouts/models/workout_model.dart' as _i27;
 import 'package:bogge_app/ui/screens/authorized/devices/devices_screen.dart'
     as _i3;
 import 'package:bogge_app/ui/screens/authorized/home/home_screen.dart' as _i5;
@@ -448,18 +449,49 @@ class WelcomeRoute extends _i25.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i21.WorkoutDetailScreen]
-class WorkoutDetailRoute extends _i25.PageRouteInfo<void> {
-  const WorkoutDetailRoute({List<_i25.PageRouteInfo>? children})
-    : super(WorkoutDetailRoute.name, initialChildren: children);
+class WorkoutDetailRoute extends _i25.PageRouteInfo<WorkoutDetailRouteArgs> {
+  WorkoutDetailRoute({
+    required _i27.WorkoutModel item,
+    _i26.Key? key,
+    List<_i25.PageRouteInfo>? children,
+  }) : super(
+         WorkoutDetailRoute.name,
+         args: WorkoutDetailRouteArgs(item: item, key: key),
+         initialChildren: children,
+       );
 
   static const String name = 'WorkoutDetailRoute';
 
   static _i25.PageInfo page = _i25.PageInfo(
     name,
     builder: (data) {
-      return const _i21.WorkoutDetailScreen();
+      final args = data.argsAs<WorkoutDetailRouteArgs>();
+      return _i21.WorkoutDetailScreen(item: args.item, key: args.key);
     },
   );
+}
+
+class WorkoutDetailRouteArgs {
+  const WorkoutDetailRouteArgs({required this.item, this.key});
+
+  final _i27.WorkoutModel item;
+
+  final _i26.Key? key;
+
+  @override
+  String toString() {
+    return 'WorkoutDetailRouteArgs{item: $item, key: $key}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! WorkoutDetailRouteArgs) return false;
+    return item == other.item && key == other.key;
+  }
+
+  @override
+  int get hashCode => item.hashCode ^ key.hashCode;
 }
 
 /// generated route for

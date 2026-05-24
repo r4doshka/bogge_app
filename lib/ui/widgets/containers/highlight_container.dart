@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HighlightContainer extends ConsumerWidget {
-  final void Function() onPress;
+  final void Function()? onPress;
   final Widget child;
   final Decoration? decoration;
   final Color? highlightColor;

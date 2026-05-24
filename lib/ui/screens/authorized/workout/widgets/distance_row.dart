@@ -15,7 +15,7 @@ class DistanceRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
     final distance = ref.watch(
-      ftmsProvider.select((s) => s.workoutData?.formattedDistance()),
+      ftmsProvider.select((s) => s.workoutData?.roundDistance),
     );
 
     return Row(
@@ -36,7 +36,7 @@ class DistanceRow extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  distance ?? '',
+                  '${distance ?? ''}',
                   style: text_s48_w900_lsm043.copyWith(color: palette.text),
                 ),
                 AppSpace.w4,

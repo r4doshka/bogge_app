@@ -94,7 +94,7 @@ enum WorkoutSpeedControlType {
 
 enum WorkoutStatType {
   steps(title: 'Шаги', unit: '', iconPath: 'assets/icons/step-icon.svg'),
-  duration(title: 'Время', unit: 'ч', iconPath: 'assets/icons/timer-icon.svg'),
+  duration(title: 'Время', unit: '', iconPath: 'assets/icons/timer-icon.svg'),
   calories(
     title: 'Калории',
     unit: 'ккал',
@@ -102,7 +102,7 @@ enum WorkoutStatType {
   ),
   distance(
     title: 'Дистанция',
-    unit: 'км',
+    unit: '',
     iconPath: 'assets/icons/location-icon.svg',
   );
 
