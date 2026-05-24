@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WorkoutSpeedControlButton extends ConsumerWidget {
   final WorkoutSpeedControlType controlType;
-  final Future<void> Function(double) onPress;
+  final Future<void> Function(double)? onPress;
 
   const WorkoutSpeedControlButton({
     required this.controlType,
@@ -28,14 +28,18 @@ class WorkoutSpeedControlButton extends ConsumerWidget {
       containerHeight: AppSpace.s44.spMin,
       containerWidth: 100.spMin,
       backgroundColor: palette.primary12,
-      onPress: () async {
-        HapticFeedback.heavyImpact();
-        onPress(0.1);
-      },
-      onLongPress: () async {
-        HapticFeedback.heavyImpact();
-        onPress(1);
-      },
+      onPress: onPress != null
+          ? () async {
+              HapticFeedback.heavyImpact();
+              onPress!(0.1);
+            }
+          : null,
+      onLongPress: onPress != null
+          ? () async {
+              HapticFeedback.heavyImpact();
+              onPress!(1);
+            }
+          : null,
     );
   }
 }

@@ -10,8 +10,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WorkoutSpeedButton extends ConsumerWidget {
   final double speed;
+  final bool disabled;
 
-  const WorkoutSpeedButton({required this.speed, super.key});
+  const WorkoutSpeedButton({
+    required this.speed,
+    required this.disabled,
+    super.key,
+  });
 
   bool _isSelected(double currentSpeed) {
     return (currentSpeed - speed).abs() < 0.05;
@@ -40,9 +45,11 @@ class WorkoutSpeedButton extends ConsumerWidget {
         vertical: AppSpace.s8.h,
         horizontal: AppSpace.s8.w,
       ),
-      onPress: () async {
-        await ref.read(ftmsProvider.notifier).setSpeed(speed);
-      },
+      onPress: disabled
+          ? null
+          : () async {
+              await ref.read(ftmsProvider.notifier).setSpeed(speed);
+            },
     );
   }
 }

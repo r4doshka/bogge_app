@@ -41,6 +41,12 @@ class WorkoutControlPanel extends HookConsumerWidget {
       }
     }
 
+    final treadmillStatus = ref.watch(
+      ftmsProvider.select((s) => s.treadmillStatus),
+    );
+
+    final canChangeSpeed = treadmillStatus == TreadmillStatus.running;
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onVerticalDragEnd: handleVerticalDragEnd,
@@ -121,31 +127,50 @@ class WorkoutControlPanel extends HookConsumerWidget {
                       children: [
                         WorkoutSpeedControlButton(
                           controlType: WorkoutSpeedControlType.decrease,
-                          onPress: (step) async {
-                            await ref
-                                .read(ftmsProvider.notifier)
-                                .decreaseSpeed(step: step);
-                          },
+                          onPress: canChangeSpeed
+                              ? (step) async {
+                                  await ref
+                                      .read(ftmsProvider.notifier)
+                                      .decreaseSpeed(step: step);
+                                }
+                              : null,
                         ),
                         const WorkoutSpeedView(),
                         WorkoutSpeedControlButton(
                           controlType: WorkoutSpeedControlType.increase,
-                          onPress: (step) async {
-                            await ref
-                                .read(ftmsProvider.notifier)
-                                .increaseSpeed(step: step);
-                          },
+                          onPress: canChangeSpeed
+                              ? (step) async {
+                                  await ref
+                                      .read(ftmsProvider.notifier)
+                                      .increaseSpeed(step: step);
+                                }
+                              : null,
                         ),
                       ],
                     ),
                     AppSpace.h16,
                     Row(
                       children: [
-                        Expanded(child: WorkoutSpeedButton(speed: 4)),
+                        Expanded(
+                          child: WorkoutSpeedButton(
+                            speed: 4,
+                            disabled: !canChangeSpeed,
+                          ),
+                        ),
                         AppSpace.w20,
-                        Expanded(child: WorkoutSpeedButton(speed: 7)),
+                        Expanded(
+                          child: WorkoutSpeedButton(
+                            speed: 7,
+                            disabled: !canChangeSpeed,
+                          ),
+                        ),
                         AppSpace.w20,
-                        Expanded(child: WorkoutSpeedButton(speed: 10)),
+                        Expanded(
+                          child: WorkoutSpeedButton(
+                            speed: 10,
+                            disabled: !canChangeSpeed,
+                          ),
+                        ),
                       ],
                     ),
                   ],

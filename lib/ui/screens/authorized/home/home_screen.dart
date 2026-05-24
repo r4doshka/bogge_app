@@ -61,7 +61,9 @@ class HomeScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 AppSpace.h16,
-                                WorkoutList(list: response.workouts),
+                                Expanded(
+                                  child: WorkoutList(list: response.workouts),
+                                ),
                               ],
                             );
                           },
