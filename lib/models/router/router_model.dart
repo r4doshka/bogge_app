@@ -21,7 +21,8 @@ enum AppRoutesList {
   workout,
   workoutPrepare,
   workoutFinish,
-  workoutDetail;
+  workoutStats,
+  workoutStatsDetail;
 
   const AppRoutesList();
 

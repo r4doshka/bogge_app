@@ -92,15 +92,27 @@ enum WorkoutSpeedControlType {
   const WorkoutSpeedControlType({required this.iconPath});
 }
 
-enum WorkoutStatType {
-  steps(title: 'Шаги', unit: '', iconPath: 'assets/icons/step-icon.svg'),
-  duration(title: 'Время', unit: '', iconPath: 'assets/icons/timer-icon.svg'),
+enum WorkoutStatsType {
+  steps(
+    value: 1,
+    title: 'Шаги',
+    unit: '',
+    iconPath: 'assets/icons/step-icon.svg',
+  ),
+  duration(
+    value: 2,
+    title: 'Время',
+    unit: '',
+    iconPath: 'assets/icons/timer-icon.svg',
+  ),
   calories(
+    value: 3,
     title: 'Калории',
     unit: 'ккал',
     iconPath: 'assets/icons/fire-icon.svg',
   ),
   distance(
+    value: 4,
     title: 'Дистанция',
     unit: '',
     iconPath: 'assets/icons/location-icon.svg',
@@ -109,10 +121,53 @@ enum WorkoutStatType {
   final String title;
   final String unit;
   final String iconPath;
+  final int value;
 
-  const WorkoutStatType({
+  const WorkoutStatsType({
     required this.title,
     required this.unit,
     required this.iconPath,
+    required this.value,
+  });
+}
+
+enum WorkoutStatsPeriod {
+  day(value: 1, title: 'Сегодня', segmentName: 'День', description: 'Всего'),
+  week(
+    value: 2,
+    title: 'На этой неделе',
+    segmentName: 'Неделя',
+    description: 'В среднем за день',
+  ),
+  month(
+    value: 3,
+    title: 'В этом месяце',
+    segmentName: 'Месяц',
+    description: 'В среднем за день',
+  ),
+  year(
+    value: 4,
+    title: 'В этом году',
+    segmentName: 'Год',
+    description: 'В среднем за день',
+  );
+
+  final int value;
+  final String title;
+  final String segmentName;
+  final String description;
+
+  static List<String> get titleList => [
+    day.segmentName,
+    week.segmentName,
+    month.segmentName,
+    year.segmentName,
+  ];
+
+  const WorkoutStatsPeriod({
+    required this.value,
+    required this.title,
+    required this.segmentName,
+    required this.description,
   });
 }

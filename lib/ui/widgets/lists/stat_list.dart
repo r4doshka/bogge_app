@@ -7,19 +7,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class StatList extends ConsumerWidget {
   final WorkoutStatValues values;
+  final void Function(WorkoutStatsType)? onPress;
 
-  const StatList({required this.values, super.key});
+  const StatList({required this.values, this.onPress, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
-      itemCount: WorkoutStatType.values.length,
+      itemCount: WorkoutStatsType.values.length,
       itemBuilder: (context, index) {
-        final item = WorkoutStatType.values[index];
+        final item = WorkoutStatsType.values[index];
 
-        final isLast = WorkoutStatType.values.length - 1 == index;
+        final isLast = WorkoutStatsType.values.length - 1 == index;
         final isFirst = index == 0;
 
         final borderRadius = getStatItemBorderRadius(isLast, isFirst);
@@ -31,6 +32,7 @@ class StatList extends ConsumerWidget {
           borderRadius: borderRadius,
           isLast: isLast,
           value: '$value ${item.unit}'.trim(),
+          onPress: onPress != null ? () => onPress!(item) : null,
         );
       },
     );

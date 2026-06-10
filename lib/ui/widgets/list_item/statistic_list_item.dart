@@ -10,7 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class StatisticListItem extends ConsumerWidget {
-  final WorkoutStatType item;
+  final WorkoutStatsType item;
   final String value;
   final BorderRadius? borderRadius;
   final void Function()? onPress;

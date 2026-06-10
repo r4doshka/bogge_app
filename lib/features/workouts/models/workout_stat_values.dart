@@ -1,7 +1,9 @@
+import 'package:bogge_app/features/ftms/helpers/format_distance.dart';
 import 'package:bogge_app/features/ftms/models/ftms_data.dart';
 import 'package:bogge_app/features/user/models/user_model.dart';
 import 'package:bogge_app/features/workouts/models/workout_model.dart';
 import 'package:bogge_app/utils/enums.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WorkoutStatValues {
   final String steps;
@@ -33,22 +35,22 @@ class WorkoutStatValues {
 
   factory WorkoutStatValues.fromWorkout(WorkoutModel data) {
     return WorkoutStatValues(
-      steps: data.steps.toString(),
+      steps: formatSteps(data.steps),
       duration: formatWorkoutDuration(data.duration),
       calories: data.calories.toString(),
       distance: data.formattedDistance(),
     );
   }
 
-  String getValue(WorkoutStatType type) {
+  String getValue(WorkoutStatsType type) {
     switch (type) {
-      case WorkoutStatType.steps:
+      case WorkoutStatsType.steps:
         return steps;
-      case WorkoutStatType.duration:
+      case WorkoutStatsType.duration:
         return duration;
-      case WorkoutStatType.calories:
+      case WorkoutStatsType.calories:
         return calories;
-      case WorkoutStatType.distance:
+      case WorkoutStatsType.distance:
         return distance;
     }
   }
@@ -75,5 +77,28 @@ class WorkoutStatValues {
     }
 
     return parts.join(' ');
+  }
+
+  static String formatStat({
+    required WorkoutStatsType type,
+    required int value,
+  }) {
+    switch (type) {
+      case WorkoutStatsType.steps:
+        return formatSteps(value);
+
+      case WorkoutStatsType.duration:
+        return formatWorkoutDuration(value);
+
+      case WorkoutStatsType.calories:
+        return '${value.toString()} ккал';
+
+      case WorkoutStatsType.distance:
+        return formatDistanceMeters(value);
+    }
+  }
+
+  static String formatSteps(int steps) {
+    return NumberFormat.decimalPattern('en').format(steps);
   }
 }

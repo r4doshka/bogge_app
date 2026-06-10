@@ -34,6 +34,8 @@ dependencies:
   calendar_date_picker2: ^2.0.1
   flutter_blue_plus: ^2.3.3
   app_settings: ^7.0.0
+  custom_sliding_segmented_control: ^1.8.5
+  fl_chart: ^1.2.0
 
 
 dev_dependencies:

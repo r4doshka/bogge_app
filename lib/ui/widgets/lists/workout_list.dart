@@ -23,7 +23,7 @@ class WorkoutList extends ConsumerWidget {
 
         return WorkoutListItem(
           item: item,
-          onPress: () => context.router.push(WorkoutDetailRoute(item: item)),
+          onPress: () => context.router.push(WorkoutStatsRoute(item: item)),
         );
       },
     );

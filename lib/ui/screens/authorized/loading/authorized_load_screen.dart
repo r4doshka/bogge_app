@@ -5,6 +5,7 @@ import 'package:bogge_app/features/user/providers/user_provider.dart';
 import 'package:bogge_app/providers/auth/auth_provider.dart';
 import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 import 'package:bogge_app/providers/storage_provider.dart';
+import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/services/initializer/app_data_initializer.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/services/network_connectivity_notifier.dart';
@@ -171,9 +172,14 @@ class AuthorizedLoadState extends ConsumerState<AuthorizedLoadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const PopScope(
+    final palette = ref.read(paletteProvider);
+
+    return PopScope(
       canPop: false,
-      child: Scaffold(body: Center(child: LoadingLogo())),
+      child: Scaffold(
+        backgroundColor: palette.primary,
+        body: Center(child: LoadingLogo()),
+      ),
     );
   }
 }
