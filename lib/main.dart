@@ -53,6 +53,9 @@ class MainApp extends HookConsumerWidget {
             theme: ThemeData(
               fontFamily: "HarmonyOsSans",
               scaffoldBackgroundColor: palette.bgLight,
+              bottomSheetTheme: const BottomSheetThemeData(
+                constraints: BoxConstraints(maxWidth: double.infinity),
+              ),
             ),
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
