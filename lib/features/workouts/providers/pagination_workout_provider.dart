@@ -10,7 +10,6 @@ final paginatedWorkoutsProvider = FutureProvider.autoDispose
     .family<PaginatedWorkoutsResponse, int>((ref, page) async {
       try {
         final api = ref.read(workoutRepository);
-
         final response = await api.getWorkouts(
           max: workoutMax,
           offset: page * workoutMax,

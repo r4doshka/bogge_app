@@ -8,7 +8,7 @@ import 'package:bogge_app/ui/widgets/buttons/bluetooth_button.dart';
 import 'package:bogge_app/ui/widgets/buttons/profile_button.dart';
 import 'package:bogge_app/ui/widgets/empty_workouts.dart';
 import 'package:bogge_app/ui/widgets/lists/workout_list.dart';
-import 'package:bogge_app/ui/widgets/spinner.dart';
+import 'package:bogge_app/ui/widgets/skeleton/workout_list_skeleton.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -61,34 +61,23 @@ class HomeScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 AppSpace.h16,
-                                Expanded(
-                                  child: WorkoutList(list: response.workouts),
-                                ),
+                                Expanded(child: WorkoutList(total: totalCount)),
                               ],
                             );
                           },
                           error: (_, _) => const SizedBox(),
-                          loading: () => const Spinner(),
+                          loading: () => const WorkoutListSkeleton(),
                         );
                       },
                       error: (error, _) {
                         debugPrint('e $error');
                         return const SizedBox();
                       },
-                      loading: () => const Spinner(),
+                      loading: () => const WorkoutListSkeleton(),
                     );
                   },
                 ),
               ),
-
-              // PrimaryButton(
-              //   text: 'prepare',
-              //   onPress: () => context.router.push(WorkoutPrepareRoute()),
-              // ),
-              // PrimaryButton(
-              //   text: 'disconnect',
-              //   onPress: () => ref.read(ftmsProvider.notifier).disconnect(),
-              // ),
             ],
           ),
         ),

@@ -7,8 +7,8 @@ import 'package:bogge_app/ui/ui_tokens/app_space.dart';
 import 'package:bogge_app/ui/ui_tokens/typographic.dart';
 import 'package:bogge_app/ui/widgets/charts/workout_stats_chart.dart';
 import 'package:bogge_app/ui/widgets/headers/common_header.dart';
+import 'package:bogge_app/ui/widgets/skeleton/workout_stat_card_skeleton.dart';
 import 'package:bogge_app/ui/widgets/sliding_segmented_control.dart';
-import 'package:bogge_app/ui/widgets/spinner.dart';
 import 'package:bogge_app/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +114,7 @@ class WorkoutStatsDetailScreen extends HookConsumerWidget {
                               ],
                             );
                           },
-                          loading: () => const Spinner(),
+                          loading: () => const WorkoutStatsCardSkeleton(),
                           error: (_, _) => const SizedBox(),
                         );
                       },
