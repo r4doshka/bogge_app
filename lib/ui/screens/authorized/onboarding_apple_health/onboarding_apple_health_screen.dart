@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/features/apple_health/providers/apple_health_service_provider.dart';
 import 'package:bogge_app/providers/theme/palette_provider.dart';
 import 'package:bogge_app/services/navigation_service.dart';
 import 'package:bogge_app/ui/ui_tokens/app_space.dart';
@@ -8,16 +9,18 @@ import 'package:bogge_app/ui/widgets/headers/common_header.dart';
 import 'package:bogge_app/ui/widgets/progress_line.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 
 @RoutePage()
-class OnboardingAppleHealthScreen extends ConsumerWidget {
+class OnboardingAppleHealthScreen extends HookConsumerWidget {
   const OnboardingAppleHealthScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final palette = ref.read(paletteProvider);
+    final isLoading = useState(false);
 
     return Scaffold(
       body: SafeArea(
@@ -72,9 +75,28 @@ class OnboardingAppleHealthScreen extends ConsumerWidget {
               padding: AppSpace.ph16,
               child: PrimaryButton(
                 text: 'Начать'.tr(),
-                onPress: () => ref.read(navigationServiceProvider).replaceAll([
-                  const HomeRoute(),
-                ]),
+                isLoading: isLoading.value,
+                onPress: isLoading.value
+                    ? null
+                    : () async {
+                        isLoading.value = true;
+
+                        try {
+                          await ref
+                              .read(appleHealthServiceProvider)
+                              .requestPermissions();
+                        } catch (e, trace) {
+                          debugPrint(
+                            'Apple Health permissions error: $e\n$trace',
+                          );
+                        }
+
+                        isLoading.value = false;
+
+                        ref.read(navigationServiceProvider).replaceAll([
+                          const HomeRoute(),
+                        ]);
+                      },
               ),
             ),
           ],

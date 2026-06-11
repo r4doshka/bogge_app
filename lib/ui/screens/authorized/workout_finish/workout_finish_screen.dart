@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bogge_app/features/apple_health/providers/apple_health_service_provider.dart';
 import 'package:bogge_app/features/ftms/helpers/estimate_steps_by_height.dart';
 import 'package:bogge_app/features/ftms/providers/ftms_provider.dart';
 import 'package:bogge_app/features/user/providers/user_provider.dart';
@@ -28,6 +29,14 @@ class WorkoutFinishScreen extends ConsumerWidget {
     );
     final device = ref.watch(ftmsProvider.select((s) => s.device));
     final user = ref.watch(userProvider);
+
+    final date = toBeginningOfSentenceCase(
+      DateFormat('EEEE, d MMMM', 'ru_RU').format(
+        DateTime.now().subtract(
+          Duration(seconds: lastWorkoutData?.elapsedTime ?? 0),
+        ),
+      ),
+    );
 
     return Scaffold(
       body: SafeArea(
@@ -65,6 +74,16 @@ class WorkoutFinishScreen extends ConsumerWidget {
                       if (createdWorkout != null) {
                         ref.invalidate(totalWorkoutCountProvider);
                         ref.invalidate(paginatedWorkoutsProvider);
+
+                        try {
+                          final synced = await ref
+                              .read(appleHealthServiceProvider)
+                              .writeWorkout(createdWorkout);
+
+                          debugPrint('Apple Health sync result: $synced');
+                        } catch (e, trace) {
+                          debugPrint('Apple Health sync error: $e\n$trace');
+                        }
                       }
 
                       if (context.mounted) {
@@ -80,7 +99,7 @@ class WorkoutFinishScreen extends ConsumerWidget {
                 style: text_s34_w700_ls04.copyWith(color: palette.text),
               ),
               Text(
-                'Вторник, 10 февраля',
+                date,
                 style: text_s14_w400_ls01.copyWith(color: palette.primary),
               ),
               AppSpace.h16,

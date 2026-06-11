@@ -35,7 +35,6 @@ class HomeScreen extends ConsumerWidget {
               AppSpace.h16,
               StartWorkoutBanner(),
               AppSpace.h24,
-
               Expanded(
                 child: Consumer(
                   builder: (context, ref, _) {
