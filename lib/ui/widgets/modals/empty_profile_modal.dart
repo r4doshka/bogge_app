@@ -58,9 +58,14 @@ class EmptyProfileModal extends ConsumerWidget {
             onPress: () => navigationService.goToSignUp(context),
           ),
           AppSpace.h16,
-          PrimaryTextButton(
-            text: 'Уже есть аккаунт? Войти'.tr(),
-            onPress: () => navigationService.goToSignIn(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PrimaryTextButton(
+                text: 'Уже есть аккаунт? Войти'.tr(),
+                onPress: () => navigationService.goToSignIn(context),
+              ),
+            ],
           ),
         ],
       ),

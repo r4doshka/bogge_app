@@ -15,7 +15,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:bogge_app/providers/navigation/routers/authorized/authorized_router.gr.dart';
 
 class StartWorkoutBanner extends HookConsumerWidget {
-  const StartWorkoutBanner({super.key});
+  final VoidCallback? onPress;
+
+  const StartWorkoutBanner({this.onPress, super.key});
 
   Future<void> handleStartWorkout(BuildContext context, WidgetRef ref) async {
     if (!context.mounted) return;
@@ -104,16 +106,18 @@ class StartWorkoutBanner extends HookConsumerWidget {
                           height: 14.h,
                         ),
                       ),
-                      onPress: () async {
-                        if (isActive) {
-                          context.router.push(WorkoutPrepareRoute());
-                          return;
-                        }
+                      onPress:
+                          onPress ??
+                          () async {
+                            if (isActive) {
+                              context.router.push(WorkoutPrepareRoute());
+                              return;
+                            }
 
-                        shouldNavigateAfterConnect.value = true;
+                            shouldNavigateAfterConnect.value = true;
 
-                        await handleStartWorkout(context, ref);
-                      },
+                            await handleStartWorkout(context, ref);
+                          },
                     ),
                   ),
                   SizedBox(height: 14.h),

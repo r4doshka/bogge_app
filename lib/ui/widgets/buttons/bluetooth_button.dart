@@ -14,7 +14,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class BluetoothButton extends ConsumerWidget {
-  const BluetoothButton({super.key});
+  final VoidCallback? onPress;
+  const BluetoothButton({this.onPress, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +38,7 @@ class BluetoothButton extends ConsumerWidget {
           color: isActive ? palette.white30 : Colors.transparent,
         ),
       ),
-      onPress: () => context.router.push(DevicesRoute()),
+      onPress: onPress ?? () => context.router.push(DevicesRoute()),
 
       child: Row(
         children: [

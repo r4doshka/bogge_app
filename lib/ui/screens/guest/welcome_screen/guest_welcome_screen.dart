@@ -24,7 +24,10 @@ class GuestWelcomeScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  BluetoothButton(),
+                  BluetoothButton(
+                    onPress: () =>
+                        showEmptyProfileModalBottom(context: context),
+                  ),
                   ProfileButton(
                     onPress: () =>
                         showEmptyProfileModalBottom(context: context),
@@ -32,7 +35,9 @@ class GuestWelcomeScreen extends ConsumerWidget {
                 ],
               ),
               AppSpace.h16,
-              StartWorkoutBanner(),
+              StartWorkoutBanner(
+                onPress: () => showEmptyProfileModalBottom(context: context),
+              ),
               SizedBox(height: 92.h),
               EmptyWorkouts(),
             ],
