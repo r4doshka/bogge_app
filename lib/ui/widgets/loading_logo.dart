@@ -27,8 +27,8 @@ class LoadingLogo extends HookWidget {
             scale: scaleAnimation,
             child: SvgPicture.asset(
               'assets/icons/logo-icon.svg',
-              width: 50.w,
-              height: 50.w,
+              width: 40.w,
+              height: 40.w,
             ),
           )
         else
